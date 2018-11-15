@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
     public Transform mTarget;
 
-    private float mStep = 0.2f;
     private Vector3 mCenter;
 	private float mRadius = 4.0f;
 
@@ -43,8 +43,8 @@ public class PlayerController : MonoBehaviour {
 	// True for right, False for left
 	private void Rotate(bool direction) {
 		if (direction)
-			transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 60 * Time.deltaTime);
+			transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
 		else
-			transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 60 * Time.deltaTime);
+			transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
 	}
 }
