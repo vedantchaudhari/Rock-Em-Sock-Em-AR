@@ -33,23 +33,42 @@ public class BluePlayerMovement : MonoBehaviour
     private Vector3 LeftExtendedLocation;
     private Vector3 RightExtendedLocation;
 
+    private PlayerController EnemyScript;
+
+    private GameObject EnemyHead;
+
+    private float health = 300.0f;
+
     // Use this for initialization
     void Start()
     {
         mCenter = mTarget.transform.position;
+        EnemyScript = (PlayerController)GameObject.FindGameObjectWithTag("RedDude").GetComponent(typeof(PlayerController));
+        EnemyHead = GameObject.FindGameObjectWithTag("RedHead");
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        getInput();
+        if (health > 0.0f)
+        {
+            getInput();
+        }
+    }
+
+    public void Damage(float damageDone)
+    {
+        //Debug.Log("Blue Got Punched: " + damageDone);
+
+        health -= damageDone;
     }
 
     /* PRIVATE FUNCTIONS */
     private void getInput()
     {
 
-        float speed = 5.0f;
+        float speed = 0.75f;
 
         if (SystemInfo.deviceType == DeviceType.Desktop)
         {
@@ -66,7 +85,7 @@ public class BluePlayerMovement : MonoBehaviour
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch, LeftExtendPoint);
+                    Punch(LeftArmPunch, LeftExtendPoint, LeftArmDistance);
                     LeftPunch = false;
                     LeftArmDistance = 0.0f;
                     LeftParam = 0.0f;
@@ -93,7 +112,7 @@ public class BluePlayerMovement : MonoBehaviour
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch, RightExtendPoint);
+                    Punch(RightArmPunch, RightExtendPoint, RightArmDistance);
                     RightPunch = false;
                     RightArmDistance = 0.0f;
                     RightParam = 0.0f;
@@ -122,10 +141,15 @@ public class BluePlayerMovement : MonoBehaviour
         }
     }
 
-    private void Punch(GameObject fist, GameObject ExtendPoint)
+    private void Punch(GameObject fist, GameObject ExtendPoint, float damageTotal)
     {
         ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
         fist.transform.position = ExtendPoint.transform.position;
+
+        if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("RedHead").GetComponent<Collider>().bounds))
+        {
+            EnemyScript.Damage(damageTotal);
+        }
     }
 
     // fist = which hand punched
@@ -141,7 +165,6 @@ public class BluePlayerMovement : MonoBehaviour
     //{
     //    fist.transform.position -= fist.transform.forward * 1.0f;
     //}
-
 
     private Vector2 PointOnCircle(float angle)
     {
