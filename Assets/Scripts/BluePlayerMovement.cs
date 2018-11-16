@@ -18,6 +18,21 @@ public class BluePlayerMovement : MonoBehaviour
     private bool LeftPunch = true;
     private bool RightPunch = true;
 
+    private float LeftArmDistance = 100.0f;
+    private float RightArmDistance = 100.0f;
+
+    private float LeftParam = 0f;
+    private float RightParam = 0f;
+
+    public GameObject LeftResetLocation;
+    public GameObject RightResetLocation;
+
+    public GameObject LeftExtendPoint;
+    public GameObject RightExtendPoint;
+
+    private Vector3 LeftExtendedLocation;
+    private Vector3 RightExtendedLocation;
+
     // Use this for initialization
     void Start()
     {
@@ -33,10 +48,15 @@ public class BluePlayerMovement : MonoBehaviour
     /* PRIVATE FUNCTIONS */
     private void getInput()
     {
+
+        float speed = 5.0f;
+
         if (SystemInfo.deviceType == DeviceType.Desktop)
         {
             if (Input.GetKey(KeyCode.D))
+            {
                 Rotate(true);
+            }
             else if (Input.GetKey(KeyCode.A))
             {
                 Rotate(false);
@@ -46,28 +66,54 @@ public class BluePlayerMovement : MonoBehaviour
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch);
+                    Punch(LeftArmPunch, LeftExtendPoint);
                     LeftPunch = false;
+                    LeftArmDistance = 0.0f;
+                    LeftParam = 0.0f;
                 }
             }
-            else if (!LeftPunch)
+            else
             {
-                LeftPunch = true;
-                ResetPunch(LeftArmPunch);
+                if (!LeftPunch)
+                {
+                    LeftPunch = true;
+                    LeftExtendedLocation = LeftArmPunch.transform.position;
+                    LeftExtendPoint.transform.position -= LeftExtendPoint.transform.forward * 1.0f;
+                    //ResetPunchFull(LeftArmPunch);
+                }
+                if (LeftArmDistance < 100.0f)
+                {
+                    LeftParam += Time.deltaTime * speed;
+                    LeftArmDistance = Mathf.Lerp(0.0f, 100.0f, LeftParam);
+                    ResetPunchSlow(LeftArmPunch, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
+                }
             }
 
             if (Input.GetKey(KeyCode.E)) // Right punch
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch);
+                    Punch(RightArmPunch, RightExtendPoint);
                     RightPunch = false;
+                    RightArmDistance = 0.0f;
+                    RightParam = 0.0f;
                 }
             }
-            else if (!RightPunch)
+            else
             {
-                RightPunch = true;
-                ResetPunch(RightArmPunch);
+                if (!RightPunch)
+                {
+                    RightPunch = true;
+                    RightExtendedLocation = RightArmPunch.transform.position;
+                    RightExtendPoint.transform.position -= RightExtendPoint.transform.forward * 1.0f;
+                    //ResetPunchFull(RightArmPunch);
+                }
+                if (RightArmDistance < 100.0f)
+                {
+                    RightParam += Time.deltaTime * speed;
+                    RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
+                    ResetPunchSlow(RightArmPunch, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
+                }
             }
         }
         else
@@ -76,15 +122,25 @@ public class BluePlayerMovement : MonoBehaviour
         }
     }
 
-    private void Punch(GameObject fist)
+    private void Punch(GameObject fist, GameObject ExtendPoint)
     {
-        fist.transform.position += fist.transform.forward * 1.0f;
+        ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
+        fist.transform.position = ExtendPoint.transform.position;
     }
 
-    private void ResetPunch(GameObject fist)
+    // fist = which hand punched
+    // ExtnededOut = Where did the extended Punch end after the punch
+    // BackToTheSide = the location where the arm will be back on the robo's side
+    // SpeedOfMove = Where the arm should be between the two points (the t for the lerp function)
+    private void ResetPunchSlow(GameObject fist, Vector3 ExtnededOut, Vector3 BackToTheSide, float SpeedOfMove)
     {
-        fist.transform.position -= fist.transform.forward * 1.0f;
+        fist.transform.position = Vector3.Lerp(ExtnededOut, BackToTheSide, SpeedOfMove);
     }
+
+    //private void ResetPunchFull(GameObject fist)
+    //{
+    //    fist.transform.position -= fist.transform.forward * 1.0f;
+    //}
 
 
     private Vector2 PointOnCircle(float angle)

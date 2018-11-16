@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public Transform mTarget;
 
     private Vector3 mCenter;
-	private float mRadius = 4.0f;
+    private float mRadius = 4.0f;
 
     public GameObject RightArmPunch;
     public GameObject LeftArmPunch;
@@ -18,53 +18,102 @@ public class PlayerController : MonoBehaviour
     private bool LeftPunch = true;
     private bool RightPunch = true;
 
+    private float LeftArmDistance = 100.0f;
+    private float RightArmDistance = 100.0f;
+
+    private float LeftParam = 0f;
+    private float RightParam = 0f;
+
+    public GameObject LeftResetLocation;
+    public GameObject RightResetLocation;
+
+    public GameObject LeftExtendPoint;
+    public GameObject RightExtendPoint;
+
+    private Vector3 LeftExtendedLocation;
+    private Vector3 RightExtendedLocation;
 
     // Use this for initialization
-    void Start () {
-        mCenter = mTarget.transform.position;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		getInput();
-	}
-
-	/* PRIVATE FUNCTIONS */
-	private void getInput()
+    void Start()
     {
-		if (SystemInfo.deviceType == DeviceType.Desktop) {
-			if (Input.GetKey(KeyCode.RightArrow))
-				Rotate(true);
-			else if (Input.GetKey(KeyCode.LeftArrow)) {
-				Rotate(false);
-			}
+        mCenter = mTarget.transform.position;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        getInput();
+    }
+
+    /* PRIVATE FUNCTIONS */
+    private void getInput()
+    {
+
+        float speed = 5.0f;
+
+        if (SystemInfo.deviceType == DeviceType.Desktop)
+        {
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                Rotate(true);
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                Rotate(false);
+            }
 
             if (Input.GetKey(KeyCode.UpArrow)) // Left punch
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch);
+                    Punch(LeftArmPunch, LeftExtendPoint);
                     LeftPunch = false;
+                    LeftArmDistance = 0.0f;
+                    LeftParam = 0.0f;
                 }
             }
-            else if (!LeftPunch)
+            else
             {
-                LeftPunch = true;
-                ResetPunch(LeftArmPunch);
+                if (!LeftPunch)
+                {
+                    LeftPunch = true;
+                    LeftExtendedLocation = LeftArmPunch.transform.position;
+                    LeftExtendPoint.transform.position -= LeftExtendPoint.transform.forward * 1.0f;
+                    //ResetPunchFull(LeftArmPunch);
+                }
+                if (LeftArmDistance < 100.0f)
+                {
+                    LeftParam += Time.deltaTime * speed;
+                    LeftArmDistance = Mathf.Lerp(0.0f, 100.0f, LeftParam);
+                    ResetPunchSlow(LeftArmPunch, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
+                }
             }
 
             if (Input.GetKey(KeyCode.DownArrow)) // Right punch
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch);
+                    Punch(RightArmPunch, RightExtendPoint);
                     RightPunch = false;
+                    RightArmDistance = 0.0f;
+                    RightParam = 0.0f;
                 }
             }
-            else if (!RightPunch)
+            else
             {
-                RightPunch = true;
-                ResetPunch(RightArmPunch);
+                if (!RightPunch)
+                {
+                    RightPunch = true;
+                    RightExtendedLocation = RightArmPunch.transform.position;
+                    RightExtendPoint.transform.position -= RightExtendPoint.transform.forward * 1.0f;
+                    //ResetPunchFull(RightArmPunch);
+                }
+                if (RightArmDistance < 100.0f)
+                {
+                    RightParam += Time.deltaTime * speed;
+                    RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
+                    ResetPunchSlow(RightArmPunch, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
+                }
             }
         }
         else
@@ -73,29 +122,41 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Punch(GameObject fist)
+    private void Punch(GameObject fist, GameObject ExtendPoint)
     {
-        fist.transform.position += fist.transform.forward * 1.0f;
+        ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
+        fist.transform.position = ExtendPoint.transform.position;
     }
 
-    private void ResetPunch(GameObject fist)
+    // fist = which hand punched
+    // ExtnededOut = Where did the extended Punch end after the punch
+    // BackToTheSide = the location where the arm will be back on the robo's side
+    // SpeedOfMove = Where the arm should be between the two points (the t for the lerp function)
+    private void ResetPunchSlow(GameObject fist, Vector3 ExtnededOut, Vector3 BackToTheSide, float SpeedOfMove)
     {
-        fist.transform.position -= fist.transform.forward * 1.0f;
+        fist.transform.position = Vector3.Lerp(ExtnededOut, BackToTheSide, SpeedOfMove);
     }
 
-    private Vector2 PointOnCircle(float angle) {
-		float x = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.x);
-		float y = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.y);
+    //private void ResetPunchFull(GameObject fist)
+    //{
+    //    fist.transform.position -= fist.transform.forward * 1.0f;
+    //}
 
-		return new Vector2(x, y);
-	}
 
-	// True for right, False for left
-	private void Rotate(bool direction)
+    private Vector2 PointOnCircle(float angle)
     {
-		if (direction)
-			transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-		else
-			transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-	}
+        float x = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.x);
+        float y = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.y);
+
+        return new Vector2(x, y);
+    }
+
+    // True for right, False for left
+    private void Rotate(bool direction)
+    {
+        if (direction)
+            transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        else
+            transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+    }
 }
