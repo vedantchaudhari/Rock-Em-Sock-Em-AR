@@ -10,8 +10,17 @@ public class PlayerController : MonoBehaviour
     private Vector3 mCenter;
 	private float mRadius = 4.0f;
 
-	// Use this for initialization
-	void Start () {
+    public GameObject RightArmPunch;
+    public GameObject LeftArmPunch;
+
+    private float ArmSpeed = 70.0f;
+
+    private bool LeftPunch = true;
+    private bool RightPunch = true;
+
+
+    // Use this for initialization
+    void Start () {
         mCenter = mTarget.transform.position;
 	}
 	
@@ -21,19 +30,60 @@ public class PlayerController : MonoBehaviour
 	}
 
 	/* PRIVATE FUNCTIONS */
-	private void getInput() {
+	private void getInput()
+    {
 		if (SystemInfo.deviceType == DeviceType.Desktop) {
 			if (Input.GetKey(KeyCode.RightArrow))
 				Rotate(true);
 			else if (Input.GetKey(KeyCode.LeftArrow)) {
 				Rotate(false);
 			}
-		}
-		else {	// SETUP FOR MOBILE CONTROLS
 
-		}
-	}
-	private Vector2 PointOnCircle(float angle) {
+            if (Input.GetKey(KeyCode.UpArrow)) // Left punch
+            {
+                if (LeftPunch)
+                {
+                    Punch(LeftArmPunch);
+                    LeftPunch = false;
+                }
+            }
+            else if (!LeftPunch)
+            {
+                LeftPunch = true;
+                ResetPunch(LeftArmPunch);
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow)) // Right punch
+            {
+                if (RightPunch)
+                {
+                    Punch(RightArmPunch);
+                    RightPunch = false;
+                }
+            }
+            else if (!RightPunch)
+            {
+                RightPunch = true;
+                ResetPunch(RightArmPunch);
+            }
+        }
+        else
+        {   // SETUP FOR MOBILE CONTROLS
+
+        }
+    }
+
+    private void Punch(GameObject fist)
+    {
+        fist.transform.position += fist.transform.forward * 1.0f;
+    }
+
+    private void ResetPunch(GameObject fist)
+    {
+        fist.transform.position -= fist.transform.forward * 1.0f;
+    }
+
+    private Vector2 PointOnCircle(float angle) {
 		float x = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.x);
 		float y = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.y);
 
@@ -41,7 +91,8 @@ public class PlayerController : MonoBehaviour
 	}
 
 	// True for right, False for left
-	private void Rotate(bool direction) {
+	private void Rotate(bool direction)
+    {
 		if (direction)
 			transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
 		else

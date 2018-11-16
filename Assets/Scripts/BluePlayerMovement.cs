@@ -10,6 +10,14 @@ public class BluePlayerMovement : MonoBehaviour
     private Vector3 mCenter;
     private float mRadius = 4.0f;
 
+    public GameObject RightArmPunch;
+    public GameObject LeftArmPunch;
+
+    private float ArmSpeed = 70.0f;
+
+    private bool LeftPunch = true;
+    private bool RightPunch = true;
+
     // Use this for initialization
     void Start()
     {
@@ -33,12 +41,52 @@ public class BluePlayerMovement : MonoBehaviour
             {
                 Rotate(false);
             }
+
+            if (Input.GetKey(KeyCode.Q)) // Left punch
+            {
+                if (LeftPunch)
+                {
+                    Punch(LeftArmPunch);
+                    LeftPunch = false;
+                }
+            }
+            else if (!LeftPunch)
+            {
+                LeftPunch = true;
+                ResetPunch(LeftArmPunch);
+            }
+
+            if (Input.GetKey(KeyCode.E)) // Right punch
+            {
+                if (RightPunch)
+                {
+                    Punch(RightArmPunch);
+                    RightPunch = false;
+                }
+            }
+            else if (!RightPunch)
+            {
+                RightPunch = true;
+                ResetPunch(RightArmPunch);
+            }
         }
         else
         {   // SETUP FOR MOBILE CONTROLS
 
         }
     }
+
+    private void Punch(GameObject fist)
+    {
+        fist.transform.position += fist.transform.forward * 1.0f;
+    }
+
+    private void ResetPunch(GameObject fist)
+    {
+        fist.transform.position -= fist.transform.forward * 1.0f;
+    }
+
+
     private Vector2 PointOnCircle(float angle)
     {
         float x = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.x);
