@@ -13,7 +13,8 @@ public class BluePlayerMovement : MonoBehaviour
     public GameObject RightArmPunch;
     public GameObject LeftArmPunch;
 
-    private float ArmSpeed = 70.0f;
+    public GameObject RightArmHand;
+    public GameObject LeftArmHand;
 
     private bool LeftPunch = true;
     private bool RightPunch = true;
@@ -37,7 +38,13 @@ public class BluePlayerMovement : MonoBehaviour
 
     private GameObject EnemyHead;
 
+    public GameObject MyHead;
+
+    public Material DeadMaterial;
+
     private float health = 300.0f;
+
+    private bool RunOnce = true;
 
     // Use this for initialization
     void Start()
@@ -55,28 +62,36 @@ public class BluePlayerMovement : MonoBehaviour
         {
             getInput();
         }
+        else if (RunOnce)
+        {
+            MyHead.GetComponent<Renderer>().material = DeadMaterial;
+            RunOnce = false;
+        }
     }
 
     public void Damage(float damageDone)
     {
         //Debug.Log("Blue Got Punched: " + damageDone);
-
-        health -= damageDone;
+        if (health > 0.0f)
+        {
+            health -= damageDone;
+            MyHead.transform.position += new Vector3(0.0f, damageDone / 600.0f, 0.0f);
+        }
     }
 
     /* PRIVATE FUNCTIONS */
     private void getInput()
     {
 
-        float speed = 0.75f;
+        float speed = 1.5f;
 
         if (SystemInfo.deviceType == DeviceType.Desktop)
         {
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.A))
             {
                 Rotate(true);
             }
-            else if (Input.GetKey(KeyCode.A))
+            else if (Input.GetKey(KeyCode.D))
             {
                 Rotate(false);
             }
@@ -85,7 +100,7 @@ public class BluePlayerMovement : MonoBehaviour
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch, LeftExtendPoint, LeftArmDistance);
+                    Punch(LeftArmPunch, LeftArmHand, LeftExtendPoint, LeftArmDistance);
                     LeftPunch = false;
                     LeftArmDistance = 0.0f;
                     LeftParam = 0.0f;
@@ -112,7 +127,7 @@ public class BluePlayerMovement : MonoBehaviour
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch, RightExtendPoint, RightArmDistance);
+                    Punch(RightArmPunch, RightArmHand, RightExtendPoint, RightArmDistance);
                     RightPunch = false;
                     RightArmDistance = 0.0f;
                     RightParam = 0.0f;
@@ -141,10 +156,10 @@ public class BluePlayerMovement : MonoBehaviour
         }
     }
 
-    private void Punch(GameObject fist, GameObject ExtendPoint, float damageTotal)
+    private void Punch(GameObject arm, GameObject fist, GameObject ExtendPoint, float damageTotal)
     {
         ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
-        fist.transform.position = ExtendPoint.transform.position;
+        arm.transform.position = ExtendPoint.transform.position;
 
         if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("RedHead").GetComponent<Collider>().bounds))
         {
@@ -174,12 +189,12 @@ public class BluePlayerMovement : MonoBehaviour
         return new Vector2(x, y);
     }
 
-    // True for right, False for left
+    // True for Left, False for Right
     private void Rotate(bool direction)
     {
-        if (direction)
+        if (direction && (transform.rotation.eulerAngles.y < 240.0f && transform.rotation.eulerAngles.y > 110.0f))
             transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-        else
+        else if (!direction && (transform.rotation.eulerAngles.y > 120.0f && transform.rotation.eulerAngles.y < 250.0f))
             transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
     }
 }

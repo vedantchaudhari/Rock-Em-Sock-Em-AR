@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
     public GameObject RightArmPunch;
     public GameObject LeftArmPunch;
 
-    private float ArmSpeed = 70.0f;
+    public GameObject RightArmHand;
+    public GameObject LeftArmHand;
 
     private bool LeftPunch = true;
     private bool RightPunch = true;
@@ -37,7 +38,13 @@ public class PlayerController : MonoBehaviour
 
     private GameObject EnemyHead;
 
+    public GameObject MyHead;
+
+    public Material DeadMaterial;
+
     private float health = 300.0f;
+
+    private bool RunOnce = true;
 
     // Use this for initialization
     void Start()
@@ -54,37 +61,45 @@ public class PlayerController : MonoBehaviour
         {
             getInput();
         }
+        else if (RunOnce)
+        {
+            MyHead.GetComponent<Renderer>().material = DeadMaterial;
+            RunOnce = false;
+        }
     }
 
     public void Damage(float damageDone)
     {
         //Debug.Log("Blue Got Punched" + damageDone);
-
-        health -= damageDone;
+        if (health > 0.0f)
+        {
+            health -= damageDone;
+            MyHead.transform.position += new Vector3(0.0f, damageDone / 600.0f, 0.0f);
+        }
     }
 
     /* PRIVATE FUNCTIONS */
     private void getInput()
     {
 
-        float speed = 0.75f;
+        float speed = 1.5f;
 
         if (SystemInfo.deviceType == DeviceType.Desktop)
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.Keypad4))
             {
                 Rotate(true);
             }
-            else if (Input.GetKey(KeyCode.LeftArrow))
+            else if (Input.GetKey(KeyCode.Keypad6))
             {
                 Rotate(false);
             }
 
-            if (Input.GetKey(KeyCode.UpArrow)) // Left punch
+            if (Input.GetKey(KeyCode.Keypad7)) // Left punch
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch, LeftExtendPoint, LeftArmDistance);
+                    Punch(LeftArmPunch, LeftArmHand, LeftExtendPoint, LeftArmDistance);
                     LeftPunch = false;
                     LeftArmDistance = 0.0f;
                     LeftParam = 0.0f;
@@ -107,11 +122,11 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Input.GetKey(KeyCode.DownArrow)) // Right punch
+            if (Input.GetKey(KeyCode.Keypad9)) // Right punch
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch, RightExtendPoint, RightArmDistance);
+                    Punch(RightArmPunch, RightArmHand, RightExtendPoint, RightArmDistance);
                     RightPunch = false;
                     RightArmDistance = 0.0f;
                     RightParam = 0.0f;
@@ -128,7 +143,6 @@ public class PlayerController : MonoBehaviour
                 }
                 if (RightArmDistance < 100.0f)
                 {
-                    //Debug.Log(RightParam);
                     RightParam += Time.deltaTime * speed;
                     RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
                     ResetPunchSlow(RightArmPunch, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
@@ -141,12 +155,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Punch(GameObject fist, GameObject ExtendPoint, float damageTotal)
+    private void Punch(GameObject arm, GameObject fist, GameObject ExtendPoint, float damageTotal)
     {
         ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
-        fist.transform.position = ExtendPoint.transform.position;
+        arm.transform.position = ExtendPoint.transform.position;
 
-        if(fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
+        if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
         {
             EnemyScript.Damage(damageTotal);
         }
@@ -175,12 +189,12 @@ public class PlayerController : MonoBehaviour
         return new Vector2(x, y);
     }
 
-    // True for right, False for left
+    // True for Left, False for Right
     private void Rotate(bool direction)
     {
-        if (direction)
+        if (direction && (transform.rotation.eulerAngles.y < 60.0f || transform.rotation.eulerAngles.y > 290.0f))
             transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-        else
+        else if (!direction && (transform.rotation.eulerAngles.y > 300.0f || transform.rotation.eulerAngles.y < 70.0f))
             transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
     }
 }
