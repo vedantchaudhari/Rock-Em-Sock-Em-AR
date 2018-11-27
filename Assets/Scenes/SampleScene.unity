@@ -386,8 +386,6 @@ MonoBehaviour:
   LeftArmHand: {fileID: 0}
   LeftResetLocation: {fileID: 0}
   RightResetLocation: {fileID: 0}
-  LeftExtendPoint: {fileID: 0}
-  RightExtendPoint: {fileID: 0}
   MyHead: {fileID: 0}
   DeadMaterial: {fileID: 0}
   MoveLeftButton: 97
@@ -411,7 +409,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4869853247321626, guid: 87c0d185316f4974b947dae3d0a3f311, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -0.06178669
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4869853247321626, guid: 87c0d185316f4974b947dae3d0a3f311, type: 2}
       propertyPath: m_LocalRotation.x

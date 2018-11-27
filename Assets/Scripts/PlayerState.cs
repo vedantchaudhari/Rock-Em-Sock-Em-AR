@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerState : MonoBehaviour {
 
-	public Text mHealthText;
 	private float mHealth = 300;
 
 	// Use this for initialization
@@ -20,7 +19,7 @@ public class PlayerState : MonoBehaviour {
 		
 	}
 
-	float getHealth()
+    public float getHealth()
     {
 		return mHealth;
 	}

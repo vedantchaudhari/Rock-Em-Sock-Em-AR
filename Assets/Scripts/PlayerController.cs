@@ -28,23 +28,16 @@ public class PlayerController : MonoBehaviour
     public GameObject LeftResetLocation;
     public GameObject RightResetLocation;
 
-    public GameObject LeftExtendPoint;
-    public GameObject RightExtendPoint;
-
     private Vector3 LeftExtendedLocation;
     private Vector3 RightExtendedLocation;
 
     private PlayerState EnemyScript;
-
-    private PlayerState HealthScript;
 
     private GameObject EnemyHead;
 
     public GameObject MyHead;
 
     public Material DeadMaterial;
-
-    private float health = 300.0f;
 
     private bool RunOnce = true;
 
@@ -66,7 +59,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (health > 0.0f)
+        if (GetComponent(typeof(PlayerState)) ) // ToDo - Get Health < 0
         {
             getInput();
         }
@@ -106,7 +99,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch, LeftArmHand, LeftExtendPoint, LeftArmDistance);
+                    Punch(LeftArmPunch, LeftArmHand, LeftArmDistance);
                     LeftPunch = false;
                     LeftArmDistance = 0.0f;
                     LeftParam = 0.0f;
@@ -118,7 +111,6 @@ public class PlayerController : MonoBehaviour
                 {
                     LeftPunch = true;
                     LeftExtendedLocation = LeftArmPunch.transform.position;
-                    LeftExtendPoint.transform.position -= LeftExtendPoint.transform.forward * 1.0f;
                     //ResetPunchFull(LeftArmPunch);
                 }
                 if (LeftArmDistance < 100.0f)
@@ -133,7 +125,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch, RightArmHand, RightExtendPoint, RightArmDistance);
+                    Punch(RightArmPunch, RightArmHand, RightArmDistance);
                     RightPunch = false;
                     RightArmDistance = 0.0f;
                     RightParam = 0.0f;
@@ -145,7 +137,6 @@ public class PlayerController : MonoBehaviour
                 {
                     RightPunch = true;
                     RightExtendedLocation = RightArmPunch.transform.position;
-                    RightExtendPoint.transform.position -= RightExtendPoint.transform.forward * 1.0f;
                     //ResetPunchFull(RightArmPunch);
                 }
                 if (RightArmDistance < 100.0f)
@@ -162,10 +153,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Punch(GameObject arm, GameObject fist, GameObject ExtendPoint, float damageTotal)
+    private void Punch(GameObject arm, GameObject fist, float damageTotal)
     {
-        ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
-        arm.transform.position = ExtendPoint.transform.position;
+        arm.transform.position += arm.transform.forward * (damageTotal / 100.0f);
 
         if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
         {
