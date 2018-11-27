@@ -43,13 +43,25 @@ public class PlayerController : MonoBehaviour
     public KeyCode PunchLeftButton;
     public KeyCode PunchRightButton;
 
+    // for rotation only
+    public bool RedTeam;
+
     // Use this for initialization
     void Start()
     {
         mCenter = mTarget.transform.position;
-        EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
-        EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerController));
-        EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
+        if (RedTeam)
+        {
+            EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
+            EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerController));
+            EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
+        }
+        else
+        {
+            EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("RedDude").GetComponent(typeof(PlayerState));
+            EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("RedDude").GetComponent(typeof(PlayerController));
+            EnemyHead = GameObject.FindGameObjectWithTag("RedHead");
+        }
     }
 
     // Update is called once per frame
@@ -139,7 +151,7 @@ public class PlayerController : MonoBehaviour
     {
         arm.transform.position += arm.transform.forward * (damageTotal / 100.0f);
 
-        if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
+        if (fist.GetComponent<Collider>().bounds.Intersects(EnemyHead.GetComponent<Collider>().bounds))
         {
             EnemyHealthScript.damage(damageTotal);
         }
@@ -157,9 +169,19 @@ public class PlayerController : MonoBehaviour
     // True for Left, False for Right
     private void Rotate(bool direction)
     {
-        if (direction && (transform.rotation.eulerAngles.y < 60.0f || transform.rotation.eulerAngles.y > 290.0f))
-            transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-        else if (!direction && (transform.rotation.eulerAngles.y > 300.0f || transform.rotation.eulerAngles.y < 70.0f))
-            transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        if (RedTeam)
+        {
+            if (direction && (transform.rotation.eulerAngles.y < 60.0f || transform.rotation.eulerAngles.y > 290.0f))
+                transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+            else if (!direction && (transform.rotation.eulerAngles.y > 300.0f || transform.rotation.eulerAngles.y < 70.0f))
+                transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        }
+        else
+        {
+            if (direction && (transform.rotation.eulerAngles.y < 240.0f && transform.rotation.eulerAngles.y > 110.0f))
+                transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+            else if (!direction && (transform.rotation.eulerAngles.y > 120.0f && transform.rotation.eulerAngles.y < 250.0f))
+                transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        }
     }
 }

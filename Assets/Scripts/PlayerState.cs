@@ -11,18 +11,6 @@ public class PlayerState : MonoBehaviour {
 
     public GameObject MyHead;
 
-    // Use this for initialization
-    void Start ()
-    {
-
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
-
     public float getHealth()
     {
 		return mHealth;

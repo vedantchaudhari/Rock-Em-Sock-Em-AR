@@ -223,6 +223,11 @@ Prefab:
       propertyPath: mTarget
       value: 
       objectReference: {fileID: 521058935}
+    - target: {fileID: 114401695481664276, guid: 2799a1841ff8f4f41b74cf360953b6b4,
+        type: 2}
+      propertyPath: RedTeam
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2799a1841ff8f4f41b74cf360953b6b4, type: 2}
   m_IsPrefabAsset: 0
