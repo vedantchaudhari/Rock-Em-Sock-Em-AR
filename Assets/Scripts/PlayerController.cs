@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     public Transform mTarget;
 
     private Vector3 mCenter;
     private float mRadius = 4.0f;
 
-    public GameObject RightArmPunch;
-    public GameObject LeftArmPunch;
+    public GameObject RightArm;
+    public GameObject LeftArm;
 
-    public GameObject RightArmHand;
-    public GameObject LeftArmHand;
+    public GameObject RightHand;
+    public GameObject LeftHand;
 
     private bool LeftPunch = true;
     private bool RightPunch = true;
@@ -31,15 +30,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 LeftExtendedLocation;
     private Vector3 RightExtendedLocation;
 
-    private PlayerState EnemyScript;
+    private PlayerState EnemyHealthScript;
+
+    private PlayerController EnemyControllerScript;
 
     private GameObject EnemyHead;
-
-    public GameObject MyHead;
-
-    public Material DeadMaterial;
-
-    private bool RunOnce = true;
 
     // Button Presses
     public KeyCode MoveLeftButton;
@@ -52,30 +47,17 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         mCenter = mTarget.transform.position;
-        EnemyScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
+        EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
+        EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerController));
         EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GetComponent(typeof(PlayerState)) ) // ToDo - Get Health < 0
+        if (GetComponent<PlayerState>().getHealth() > 0.0f)
         {
             getInput();
-        }
-        else if (RunOnce)
-        {
-            MyHead.GetComponent<Renderer>().material = DeadMaterial;
-            RunOnce = false;
-        }
-    }
-
-    public void Damage(float damageDone)
-    {
-        if (health > 0.0f)
-        {
-            health -= damageDone;
-            MyHead.transform.position += new Vector3(0.0f, damageDone / 600.0f, 0.0f);
         }
     }
 
@@ -99,7 +81,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch, LeftArmHand, LeftArmDistance);
+                    Punch(LeftArm, LeftHand, LeftArmDistance);
                     LeftPunch = false;
                     LeftArmDistance = 0.0f;
                     LeftParam = 0.0f;
@@ -110,14 +92,14 @@ public class PlayerController : MonoBehaviour
                 if (!LeftPunch)
                 {
                     LeftPunch = true;
-                    LeftExtendedLocation = LeftArmPunch.transform.position;
+                    LeftExtendedLocation = LeftArm.transform.position;
                     //ResetPunchFull(LeftArmPunch);
                 }
                 if (LeftArmDistance < 100.0f)
                 {
                     LeftParam += Time.deltaTime * speed;
                     LeftArmDistance = Mathf.Lerp(0.0f, 100.0f, LeftParam);
-                    ResetPunchSlow(LeftArmPunch, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
+                    ResetPunchSlow(LeftArm, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
                 }
             }
 
@@ -125,7 +107,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch, RightArmHand, RightArmDistance);
+                    Punch(RightArm, RightHand, RightArmDistance);
                     RightPunch = false;
                     RightArmDistance = 0.0f;
                     RightParam = 0.0f;
@@ -136,14 +118,14 @@ public class PlayerController : MonoBehaviour
                 if (!RightPunch)
                 {
                     RightPunch = true;
-                    RightExtendedLocation = RightArmPunch.transform.position;
+                    RightExtendedLocation = RightArm.transform.position;
                     //ResetPunchFull(RightArmPunch);
                 }
                 if (RightArmDistance < 100.0f)
                 {
                     RightParam += Time.deltaTime * speed;
                     RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
-                    ResetPunchSlow(RightArmPunch, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
+                    ResetPunchSlow(RightArm, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
                 }
             }
         }
@@ -159,7 +141,7 @@ public class PlayerController : MonoBehaviour
 
         if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
         {
-            EnemyScript.damage(damageTotal);
+            EnemyHealthScript.damage(damageTotal);
         }
     }
 
@@ -170,20 +152,6 @@ public class PlayerController : MonoBehaviour
     private void ResetPunchSlow(GameObject fist, Vector3 ExtnededOut, Vector3 BackToTheSide, float SpeedOfMove)
     {
         fist.transform.position = Vector3.Lerp(ExtnededOut, BackToTheSide, SpeedOfMove);
-    }
-
-    //private void ResetPunchFull(GameObject fist)
-    //{
-    //    fist.transform.position -= fist.transform.forward * 1.0f;
-    //}
-
-
-    private Vector2 PointOnCircle(float angle)
-    {
-        float x = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.x);
-        float y = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.y);
-
-        return new Vector2(x, y);
     }
 
     // True for Left, False for Right

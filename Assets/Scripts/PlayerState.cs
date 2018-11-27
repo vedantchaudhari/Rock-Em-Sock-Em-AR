@@ -7,8 +7,12 @@ public class PlayerState : MonoBehaviour {
 
 	private float mHealth = 300;
 
-	// Use this for initialization
-	void Start ()
+    public Material DeadMaterial;
+
+    public GameObject MyHead;
+
+    // Use this for initialization
+    void Start ()
     {
 
 	}
@@ -24,8 +28,18 @@ public class PlayerState : MonoBehaviour {
 		return mHealth;
 	}
 
-	public void damage(float amount)
+	public void damage(float damageAmount)
     {
-		mHealth -= amount;
-	}
+		mHealth -= damageAmount;
+        MyHead.transform.position += new Vector3(0.0f, damageAmount / 600.0f, 0.0f);
+        if (mHealth < 0.0f)
+        {
+            Dead();
+        }
+    }
+
+    private void Dead()
+    {
+        MyHead.GetComponent<Renderer>().material = DeadMaterial;
+    }
 }
