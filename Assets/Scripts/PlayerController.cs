@@ -34,7 +34,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 LeftExtendedLocation;
     private Vector3 RightExtendedLocation;
 
-    private BluePlayerMovement EnemyScript;
+    private PlayerState EnemyScript;
+
+    private PlayerState HealthScript;
 
     private GameObject EnemyHead;
 
@@ -46,11 +48,18 @@ public class PlayerController : MonoBehaviour
 
     private bool RunOnce = true;
 
+    // Button Presses
+    public KeyCode MoveLeftButton;
+    public KeyCode MoveRightButton;
+
+    public KeyCode PunchLeftButton;
+    public KeyCode PunchRightButton;
+
     // Use this for initialization
     void Start()
     {
         mCenter = mTarget.transform.position;
-        EnemyScript = (BluePlayerMovement)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(BluePlayerMovement));
+        EnemyScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
         EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
     }
 
@@ -70,7 +79,6 @@ public class PlayerController : MonoBehaviour
 
     public void Damage(float damageDone)
     {
-        //Debug.Log("Blue Got Punched" + damageDone);
         if (health > 0.0f)
         {
             health -= damageDone;
@@ -81,21 +89,20 @@ public class PlayerController : MonoBehaviour
     /* PRIVATE FUNCTIONS */
     private void getInput()
     {
-
         float speed = 1.5f;
 
         if (SystemInfo.deviceType == DeviceType.Desktop)
         {
-            if (Input.GetKey(KeyCode.Keypad4))
+            if (Input.GetKey(MoveLeftButton))
             {
                 Rotate(true);
             }
-            else if (Input.GetKey(KeyCode.Keypad6))
+            else if (Input.GetKey(MoveRightButton))
             {
                 Rotate(false);
             }
 
-            if (Input.GetKey(KeyCode.Keypad7)) // Left punch
+            if (Input.GetKey(PunchLeftButton)) // Left punch
             {
                 if (LeftPunch)
                 {
@@ -122,7 +129,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Input.GetKey(KeyCode.Keypad9)) // Right punch
+            if (Input.GetKey(PunchRightButton)) // Right punch
             {
                 if (RightPunch)
                 {
@@ -162,7 +169,7 @@ public class PlayerController : MonoBehaviour
 
         if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
         {
-            EnemyScript.Damage(damageTotal);
+            EnemyScript.damage(damageTotal);
         }
     }
 

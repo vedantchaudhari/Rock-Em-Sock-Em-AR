@@ -55,7 +55,6 @@ GameObject:
   - component: {fileID: 33914800898102108}
   - component: {fileID: 23390150765217556}
   - component: {fileID: 54430727872067000}
-  - component: {fileID: 114827309402431540}
   m_Layer: 0
   m_Name: BlueRobo
   m_TagString: BlueDude
@@ -792,25 +791,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114827309402431540
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1222550658058350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daab089e870dbf948a2b964f82961cef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mTarget: {fileID: 0}
-  RightArmPunch: {fileID: 1584707230250486}
-  LeftArmPunch: {fileID: 1589206291296598}
-  RightArmHand: {fileID: 1218033816986714}
-  LeftArmHand: {fileID: 1327243472588616}
-  LeftResetLocation: {fileID: 1302844777445380}
-  RightResetLocation: {fileID: 1577376460559910}
-  LeftExtendPoint: {fileID: 1205041265816128}
-  RightExtendPoint: {fileID: 1530947416379496}
-  MyHead: {fileID: 1534893299853794}
-  DeadMaterial: {fileID: 2100000, guid: 3422467ec90f269418e19b77eb00b0d7, type: 2}
