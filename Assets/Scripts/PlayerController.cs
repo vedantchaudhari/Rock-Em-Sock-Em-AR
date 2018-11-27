@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
 
     public Transform mTarget;
@@ -59,6 +60,11 @@ public class PlayerController : MonoBehaviour
     {
         if (health > 0.0f)
         {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
             getInput();
         }
         else if (RunOnce)
@@ -150,8 +156,29 @@ public class PlayerController : MonoBehaviour
             }
         }
         else
-        {   // SETUP FOR MOBILE CONTROLS
+        {   
+            // Check for left/right tap
+            if (Input.touchCount > 0)
+            {
+                Touch currTouch = Input.GetTouch(0);
 
+                if (currTouch.position.x < Screen.width / 2)        // Punch left
+                {
+                }
+                else if (currTouch.position.x > Screen.width / 2)   // Punch right
+                {
+
+                }
+            }
+            // Check if tilted left/right
+            if (Input.acceleration.x > 0.1f)        // Move right
+            {
+                Rotate(false);
+            }
+            else if (Input.acceleration.x < -0.1f)  // Move left
+            {
+                Rotate(true);
+            }
         }
     }
 
