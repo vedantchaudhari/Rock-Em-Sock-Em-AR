@@ -770,3 +770,4 @@ MonoBehaviour:
   MoveRightButton: 262
   PunchLeftButton: 263
   PunchRightButton: 265
+  RedTeam: 1

@@ -1,9 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour
+public class NetworkedPlayerController : NetworkBehaviour
 {
+    /*
+    * Base Input Controller for Player
+    * Network Enabled
+    */
+    // Control Definitions
+    const KeyCode LEFT_MOVE_KEY = KeyCode.A;
+    const KeyCode RIGHT_MOVE_KEY = KeyCode.D;
+    const KeyCode LEFT_PUNCH_KEY = KeyCode.Q;
+    const KeyCode RIGHT_PUNCH_KEY = KeyCode.E;
+
     public Transform mTarget;
 
     private Vector3 mCenter;
@@ -66,12 +77,32 @@ public class PlayerController : MonoBehaviour
         // Set spawn position
     }
 
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        //this.GetComponent<Material>().color = Color.green;
+    }
+
+    public virtual void OnServerAddPlayer(NetworkConnection connection, short playerControllerID)
+    {
+        // Check if client 1
+        // Assign color
+        // Assign Start Position
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (GetComponent<PlayerState>().getHealth() > 0.0f)
         {
-            getInput();
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+            if (isLocalPlayer)
+            {
+                getInput();
+            }
         }
     }
 
@@ -144,7 +175,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         else
-        {   
+        {
             // Check for left/right tap
             if (Input.touchCount > 0)
             {
