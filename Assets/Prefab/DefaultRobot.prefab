@@ -57,10 +57,10 @@ GameObject:
   - component: {fileID: 4637515912967614}
   - component: {fileID: 33965632530186222}
   - component: {fileID: 23745819135471006}
-  - component: {fileID: 114592463804093702}
   - component: {fileID: 54778264049852138}
   - component: {fileID: 114287338219240628}
   - component: {fileID: 114887009347818076}
+  - component: {fileID: 114182954466883446}
   m_Layer: 0
   m_Name: DefaultRobot
   m_TagString: RedDude
@@ -794,6 +794,29 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114182954466883446
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1100593872432782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e24bbe363ea6e340af2621be4ea6c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mTarget: {fileID: 0}
+  RightArm: {fileID: 0}
+  LeftArm: {fileID: 0}
+  RightHand: {fileID: 0}
+  LeftHand: {fileID: 0}
+  LeftResetLocation: {fileID: 0}
+  RightResetLocation: {fileID: 0}
+  MoveLeftButton: 0
+  MoveRightButton: 0
+  PunchLeftButton: 0
+  PunchRightButton: 0
+  RedTeam: 0
 --- !u!114 &114287338219240628
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -826,30 +849,6 @@ MonoBehaviour:
     i15: 100
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114592463804093702
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1100593872432782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d87671b12bc34e2788763591a4dbcfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mTarget: {fileID: 0}
-  RightArmPunch: {fileID: 1297811894482218}
-  LeftArmPunch: {fileID: 1018397696496386}
-  RightArmHand: {fileID: 1517298041433584}
-  LeftArmHand: {fileID: 1005039735353306}
-  LeftResetLocation: {fileID: 1291815658406298}
-  RightResetLocation: {fileID: 1876161881186758}
-  LeftExtendPoint: {fileID: 1541924241284280}
-  RightExtendPoint: {fileID: 1767648117689764}
-  MyHead: {fileID: 1931703300611552}
-  DeadMaterial: {fileID: 2100000, guid: 3422467ec90f269418e19b77eb00b0d7, type: 2}
-  playerOne: {fileID: 0}
-  playerTwo: {fileID: 0}
 --- !u!114 &114887009347818076
 MonoBehaviour:
   m_ObjectHideFlags: 1
