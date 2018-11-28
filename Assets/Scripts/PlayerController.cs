@@ -1,9 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
+<<<<<<< HEAD
+=======
+    /*
+     * Base Input Controller for Player
+     * Network Enabled
+     */
+
+    // Control Definitions
+    const KeyCode LEFT_MOVE_KEY = KeyCode.A;
+    const KeyCode RIGHT_MOVE_KEY = KeyCode.D;
+    const KeyCode LEFT_PUNCH_KEY = KeyCode.Q;
+    const KeyCode RIGHT_PUNCH_KEY = KeyCode.E;
+
+>>>>>>> networked_port
     public Transform mTarget;
 
     private Vector3 mCenter;
@@ -49,12 +64,48 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        // ****TODO: Rewrite
         mCenter = mTarget.transform.position;
+<<<<<<< HEAD
         if (RedTeam)
         {
             EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
             EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerController));
             EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
+=======
+        EnemyScript = (BluePlayerMovement)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(BluePlayerMovement));
+        EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
+
+        // Set spawn position
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        //this.GetComponent<Material>().color = Color.green;
+    }
+
+    public virtual void OnServerAddPlayer(NetworkConnection connection, short playerControllerID)
+    {
+        // Check if client 1
+        // Assign color
+        // Assign Start Position
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (health > 0.0f)
+        {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+            if (isLocalPlayer)
+            {
+                getInput();
+            }
+>>>>>>> networked_port
         }
         else
         {
@@ -142,8 +193,29 @@ public class PlayerController : MonoBehaviour
             }
         }
         else
-        {   // SETUP FOR MOBILE CONTROLS
+        {   
+            // Check for left/right tap
+            if (Input.touchCount > 0)
+            {
+                Touch currTouch = Input.GetTouch(0);
 
+                if (currTouch.position.x < Screen.width / 2)        // Punch left
+                {
+                }
+                else if (currTouch.position.x > Screen.width / 2)   // Punch right
+                {
+
+                }
+            }
+            // Check if tilted left/right
+            if (Input.acceleration.x > 0.1f)        // Move right
+            {
+                Rotate(false);
+            }
+            else if (Input.acceleration.x < -0.1f)  // Move left
+            {
+                Rotate(true);
+            }
         }
     }
 
