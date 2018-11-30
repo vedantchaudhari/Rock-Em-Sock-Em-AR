@@ -8,6 +8,7 @@ TagManager:
   - BlueHead
   - RedDude
   - BlueDude
+  - Center
   layers:
   - Default
   - TransparentFX
