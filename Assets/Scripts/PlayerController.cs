@@ -61,7 +61,8 @@ public class PlayerController : NetworkBehaviour
     void Start()
     {
         // ****TODO: Rewrite
-        mCenter = mTarget.transform.position;
+        mCenter = GameObject.FindGameObjectWithTag("Center").transform.position;
+        //mCenter = mTarget.transform.position;
         //EnemyScript = (BluePlayerMovement)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(BluePlayerMovement));
         //EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
 
