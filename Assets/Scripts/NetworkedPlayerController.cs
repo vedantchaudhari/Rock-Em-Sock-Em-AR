@@ -6,9 +6,10 @@ using UnityEngine.Networking;
 public class NetworkedPlayerController : NetworkBehaviour
 {
     /*
-    * Base Input Controller for Player
-    * Network Enabled
-    */
+     * Base Input Controller for Player
+     * Network Enabled
+     */
+
     // Control Definitions
     const KeyCode LEFT_MOVE_KEY = KeyCode.A;
     const KeyCode RIGHT_MOVE_KEY = KeyCode.D;
@@ -20,11 +21,11 @@ public class NetworkedPlayerController : NetworkBehaviour
     private Vector3 mCenter;
     private float mRadius = 4.0f;
 
-    public GameObject RightArm;
-    public GameObject LeftArm;
+    public GameObject RightArmPunch;
+    public GameObject LeftArmPunch;
 
-    public GameObject RightHand;
-    public GameObject LeftHand;
+    public GameObject RightArmHand;
+    public GameObject LeftArmHand;
 
     private bool LeftPunch = true;
     private bool RightPunch = true;
@@ -38,42 +39,33 @@ public class NetworkedPlayerController : NetworkBehaviour
     public GameObject LeftResetLocation;
     public GameObject RightResetLocation;
 
+    public GameObject LeftExtendPoint;
+    public GameObject RightExtendPoint;
+
     private Vector3 LeftExtendedLocation;
     private Vector3 RightExtendedLocation;
 
-    private PlayerState EnemyHealthScript;
-
-    private PlayerController EnemyControllerScript;
+    //private BluePlayerMovement EnemyScript;
 
     private GameObject EnemyHead;
 
-    // Button Presses
-    public KeyCode MoveLeftButton;
-    public KeyCode MoveRightButton;
+    public GameObject MyHead;
 
-    public KeyCode PunchLeftButton;
-    public KeyCode PunchRightButton;
+    public Material DeadMaterial;
 
-    // for rotation only
-    public bool RedTeam;
+    private float health = 300.0f;
+
+    private bool RunOnce = true;
 
     // Use this for initialization
     void Start()
     {
         // ****TODO: Rewrite
-        mCenter = mTarget.transform.position;
-        if (RedTeam)
-        {
-            EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
-            EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerController));
-            EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
-        }
-        else
-        {
-            EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("RedDude").GetComponent(typeof(PlayerState));
-            EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("RedDude").GetComponent(typeof(PlayerController));
-            EnemyHead = GameObject.FindGameObjectWithTag("RedHead");
-        }
+        mCenter = GameObject.FindGameObjectWithTag("Center").transform.position;
+        //mCenter = mTarget.transform.position;
+        //EnemyScript = (BluePlayerMovement)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(BluePlayerMovement));
+        //EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
+
         // Set spawn position
     }
 
@@ -93,7 +85,7 @@ public class NetworkedPlayerController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GetComponent<PlayerState>().getHealth() > 0.0f)
+        if (health > 0.0f)
         {
             if (!isLocalPlayer)
             {
@@ -104,29 +96,45 @@ public class NetworkedPlayerController : NetworkBehaviour
                 getInput();
             }
         }
+        else if (RunOnce)
+        {
+            MyHead.GetComponent<Renderer>().material = DeadMaterial;
+            RunOnce = false;
+        }
+    }
+
+    public void Damage(float damageDone)
+    {
+        //Debug.Log("Blue Got Punched" + damageDone);
+        if (health > 0.0f)
+        {
+            health -= damageDone;
+            MyHead.transform.position += new Vector3(0.0f, damageDone / 600.0f, 0.0f);
+        }
     }
 
     /* PRIVATE FUNCTIONS */
     private void getInput()
     {
+
         float speed = 1.5f;
 
         if (SystemInfo.deviceType == DeviceType.Desktop)
         {
-            if (Input.GetKey(MoveLeftButton))
+            if (Input.GetKey(KeyCode.Keypad4))
             {
                 Rotate(true);
             }
-            else if (Input.GetKey(MoveRightButton))
+            else if (Input.GetKey(KeyCode.Keypad6))
             {
                 Rotate(false);
             }
 
-            if (Input.GetKey(PunchLeftButton)) // Left punch
+            if (Input.GetKey(KeyCode.Keypad7)) // Left punch
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArm, LeftHand, LeftArmDistance);
+                    Punch(LeftArmPunch, LeftArmHand, LeftExtendPoint, LeftArmDistance);
                     LeftPunch = false;
                     LeftArmDistance = 0.0f;
                     LeftParam = 0.0f;
@@ -137,22 +145,23 @@ public class NetworkedPlayerController : NetworkBehaviour
                 if (!LeftPunch)
                 {
                     LeftPunch = true;
-                    LeftExtendedLocation = LeftArm.transform.position;
+                    LeftExtendedLocation = LeftArmPunch.transform.position;
+                    LeftExtendPoint.transform.position -= LeftExtendPoint.transform.forward * 1.0f;
                     //ResetPunchFull(LeftArmPunch);
                 }
                 if (LeftArmDistance < 100.0f)
                 {
                     LeftParam += Time.deltaTime * speed;
                     LeftArmDistance = Mathf.Lerp(0.0f, 100.0f, LeftParam);
-                    ResetPunchSlow(LeftArm, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
+                    ResetPunchSlow(LeftArmPunch, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
                 }
             }
 
-            if (Input.GetKey(PunchRightButton)) // Right punch
+            if (Input.GetKey(KeyCode.Keypad9)) // Right punch
             {
                 if (RightPunch)
                 {
-                    Punch(RightArm, RightHand, RightArmDistance);
+                    Punch(RightArmPunch, RightArmHand, RightExtendPoint, RightArmDistance);
                     RightPunch = false;
                     RightArmDistance = 0.0f;
                     RightParam = 0.0f;
@@ -163,14 +172,15 @@ public class NetworkedPlayerController : NetworkBehaviour
                 if (!RightPunch)
                 {
                     RightPunch = true;
-                    RightExtendedLocation = RightArm.transform.position;
+                    RightExtendedLocation = RightArmPunch.transform.position;
+                    RightExtendPoint.transform.position -= RightExtendPoint.transform.forward * 1.0f;
                     //ResetPunchFull(RightArmPunch);
                 }
                 if (RightArmDistance < 100.0f)
                 {
                     RightParam += Time.deltaTime * speed;
                     RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
-                    ResetPunchSlow(RightArm, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
+                    ResetPunchSlow(RightArmPunch, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
                 }
             }
         }
@@ -201,14 +211,15 @@ public class NetworkedPlayerController : NetworkBehaviour
         }
     }
 
-    private void Punch(GameObject arm, GameObject fist, float damageTotal)
+    private void Punch(GameObject arm, GameObject fist, GameObject ExtendPoint, float damageTotal)
     {
-        arm.transform.position += arm.transform.forward * (damageTotal / 100.0f);
+        ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
+        arm.transform.position = ExtendPoint.transform.position;
 
-        if (fist.GetComponent<Collider>().bounds.Intersects(EnemyHead.GetComponent<Collider>().bounds))
-        {
-            EnemyHealthScript.damage(damageTotal);
-        }
+        //if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
+        //{
+        //    EnemyScript.Damage(damageTotal);
+        //}
     }
 
     // fist = which hand punched
@@ -220,22 +231,26 @@ public class NetworkedPlayerController : NetworkBehaviour
         fist.transform.position = Vector3.Lerp(ExtnededOut, BackToTheSide, SpeedOfMove);
     }
 
+    //private void ResetPunchFull(GameObject fist)
+    //{
+    //    fist.transform.position -= fist.transform.forward * 1.0f;
+    //}
+
+
+    private Vector2 PointOnCircle(float angle)
+    {
+        float x = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.x);
+        float y = (mRadius * Mathf.Cos(angle * Mathf.PI / 180.0f) + mCenter.y);
+
+        return new Vector2(x, y);
+    }
+
     // True for Left, False for Right
     private void Rotate(bool direction)
     {
-        if (RedTeam)
-        {
-            if (direction && (transform.rotation.eulerAngles.y < 60.0f || transform.rotation.eulerAngles.y > 290.0f))
-                transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-            else if (!direction && (transform.rotation.eulerAngles.y > 300.0f || transform.rotation.eulerAngles.y < 70.0f))
-                transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-        }
+        if (direction)
+            transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
         else
-        {
-            if (direction && (transform.rotation.eulerAngles.y < 240.0f && transform.rotation.eulerAngles.y > 110.0f))
-                transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-            else if (!direction && (transform.rotation.eulerAngles.y > 120.0f && transform.rotation.eulerAngles.y < 250.0f))
-                transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-        }
+            transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
     }
 }
