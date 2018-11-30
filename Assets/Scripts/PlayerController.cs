@@ -45,7 +45,7 @@ public class PlayerController : NetworkBehaviour
     private Vector3 LeftExtendedLocation;
     private Vector3 RightExtendedLocation;
 
-    private BluePlayerMovement EnemyScript;
+    //private BluePlayerMovement EnemyScript;
 
     private GameObject EnemyHead;
 
@@ -62,8 +62,8 @@ public class PlayerController : NetworkBehaviour
     {
         // ****TODO: Rewrite
         mCenter = mTarget.transform.position;
-        EnemyScript = (BluePlayerMovement)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(BluePlayerMovement));
-        EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
+        //EnemyScript = (BluePlayerMovement)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(BluePlayerMovement));
+        //EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
 
         // Set spawn position
     }
@@ -215,10 +215,10 @@ public class PlayerController : NetworkBehaviour
         ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
         arm.transform.position = ExtendPoint.transform.position;
 
-        if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
-        {
-            EnemyScript.Damage(damageTotal);
-        }
+        //if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
+        //{
+        //    EnemyScript.Damage(damageTotal);
+        //}
     }
 
     // fist = which hand punched
@@ -247,9 +247,9 @@ public class PlayerController : NetworkBehaviour
     // True for Left, False for Right
     private void Rotate(bool direction)
     {
-        if (direction && (transform.rotation.eulerAngles.y < 60.0f || transform.rotation.eulerAngles.y > 290.0f))
+        if (direction)
             transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-        else if (!direction && (transform.rotation.eulerAngles.y > 300.0f || transform.rotation.eulerAngles.y < 70.0f))
+        else
             transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
     }
 }
