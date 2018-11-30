@@ -231,7 +231,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1100593872432782, guid: fb0230624af5a2c46b01872dfa06eb64,
+  m_PlayerPrefab: {fileID: 1462457169847856, guid: 401b0e40c9e087646b9c252b350c06f5,
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 1
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 521058935}
   m_Layer: 0
   m_Name: Arena_Center
-  m_TagString: Untagged
+  m_TagString: Center
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

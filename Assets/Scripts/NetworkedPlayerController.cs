@@ -21,11 +21,11 @@ public class NetworkedPlayerController : NetworkBehaviour
     private Vector3 mCenter;
     private float mRadius = 4.0f;
 
-    public GameObject RightArmPunch;
-    public GameObject LeftArmPunch;
+    public GameObject RightArm;
+    public GameObject LeftArm;
 
-    public GameObject RightArmHand;
-    public GameObject LeftArmHand;
+    public GameObject RightHand;
+    public GameObject LeftHand;
 
     private bool LeftPunch = true;
     private bool RightPunch = true;
@@ -38,9 +38,6 @@ public class NetworkedPlayerController : NetworkBehaviour
 
     public GameObject LeftResetLocation;
     public GameObject RightResetLocation;
-
-    public GameObject LeftExtendPoint;
-    public GameObject RightExtendPoint;
 
     private Vector3 LeftExtendedLocation;
     private Vector3 RightExtendedLocation;
@@ -56,6 +53,16 @@ public class NetworkedPlayerController : NetworkBehaviour
     private float health = 300.0f;
 
     private bool RunOnce = true;
+
+    // Button Presses
+    public KeyCode MoveLeftButton;
+    public KeyCode MoveRightButton;
+
+    public KeyCode PunchLeftButton;
+    public KeyCode PunchRightButton;
+
+    // for rotation and player spawn only
+    public bool RedTeam;
 
     // Use this for initialization
     void Start()
@@ -116,25 +123,24 @@ public class NetworkedPlayerController : NetworkBehaviour
     /* PRIVATE FUNCTIONS */
     private void getInput()
     {
-
         float speed = 1.5f;
 
         if (SystemInfo.deviceType == DeviceType.Desktop)
         {
-            if (Input.GetKey(KeyCode.Keypad4))
+            if (Input.GetKey(MoveLeftButton))
             {
                 Rotate(true);
             }
-            else if (Input.GetKey(KeyCode.Keypad6))
+            else if (Input.GetKey(MoveRightButton))
             {
                 Rotate(false);
             }
 
-            if (Input.GetKey(KeyCode.Keypad7)) // Left punch
+            if (Input.GetKey(PunchLeftButton)) // Left punch
             {
                 if (LeftPunch)
                 {
-                    Punch(LeftArmPunch, LeftArmHand, LeftExtendPoint, LeftArmDistance);
+                    Punch(LeftArm, LeftHand, LeftArmDistance);
                     LeftPunch = false;
                     LeftArmDistance = 0.0f;
                     LeftParam = 0.0f;
@@ -145,23 +151,22 @@ public class NetworkedPlayerController : NetworkBehaviour
                 if (!LeftPunch)
                 {
                     LeftPunch = true;
-                    LeftExtendedLocation = LeftArmPunch.transform.position;
-                    LeftExtendPoint.transform.position -= LeftExtendPoint.transform.forward * 1.0f;
+                    LeftExtendedLocation = LeftArm.transform.position;
                     //ResetPunchFull(LeftArmPunch);
                 }
                 if (LeftArmDistance < 100.0f)
                 {
                     LeftParam += Time.deltaTime * speed;
                     LeftArmDistance = Mathf.Lerp(0.0f, 100.0f, LeftParam);
-                    ResetPunchSlow(LeftArmPunch, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
+                    ResetPunchSlow(LeftArm, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
                 }
             }
 
-            if (Input.GetKey(KeyCode.Keypad9)) // Right punch
+            if (Input.GetKey(PunchRightButton)) // Right punch
             {
                 if (RightPunch)
                 {
-                    Punch(RightArmPunch, RightArmHand, RightExtendPoint, RightArmDistance);
+                    Punch(RightArm, RightHand, RightArmDistance);
                     RightPunch = false;
                     RightArmDistance = 0.0f;
                     RightParam = 0.0f;
@@ -172,15 +177,14 @@ public class NetworkedPlayerController : NetworkBehaviour
                 if (!RightPunch)
                 {
                     RightPunch = true;
-                    RightExtendedLocation = RightArmPunch.transform.position;
-                    RightExtendPoint.transform.position -= RightExtendPoint.transform.forward * 1.0f;
+                    RightExtendedLocation = RightArm.transform.position;
                     //ResetPunchFull(RightArmPunch);
                 }
                 if (RightArmDistance < 100.0f)
                 {
                     RightParam += Time.deltaTime * speed;
                     RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
-                    ResetPunchSlow(RightArmPunch, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
+                    ResetPunchSlow(RightArm, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
                 }
             }
         }
@@ -199,22 +203,21 @@ public class NetworkedPlayerController : NetworkBehaviour
 
                 }
             }
-            // Check if tilted left/right
-            if (Input.acceleration.x > 0.1f)        // Move right
-            {
-                Rotate(false);
-            }
-            else if (Input.acceleration.x < -0.1f)  // Move left
-            {
-                Rotate(true);
-            }
+        }
+        // Check if tilted left/right
+        if (Input.acceleration.x > 0.1f)        // Move right
+        {
+            Rotate(false);
+        }
+        else if (Input.acceleration.x < -0.1f)  // Move left
+        {
+            Rotate(true);
         }
     }
 
-    private void Punch(GameObject arm, GameObject fist, GameObject ExtendPoint, float damageTotal)
+    private void Punch(GameObject arm, GameObject fist, float damageTotal)
     {
-        ExtendPoint.transform.position += ExtendPoint.transform.forward * 1.0f;
-        arm.transform.position = ExtendPoint.transform.position;
+        arm.transform.position += arm.transform.forward * (damageTotal / 100.0f);
 
         //if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
         //{
@@ -230,12 +233,6 @@ public class NetworkedPlayerController : NetworkBehaviour
     {
         fist.transform.position = Vector3.Lerp(ExtnededOut, BackToTheSide, SpeedOfMove);
     }
-
-    //private void ResetPunchFull(GameObject fist)
-    //{
-    //    fist.transform.position -= fist.transform.forward * 1.0f;
-    //}
-
 
     private Vector2 PointOnCircle(float angle)
     {

@@ -50,36 +50,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         // ****TODO: Rewrite
-<<<<<<< HEAD
         mCenter = mTarget.transform.position;
         if (RedTeam)
-=======
-        mCenter = GameObject.FindGameObjectWithTag("Center").transform.position;
-        //mCenter = mTarget.transform.position;
-        //EnemyScript = (BluePlayerMovement)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(BluePlayerMovement));
-        //EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
-
-        // Set spawn position
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-        //this.GetComponent<Material>().color = Color.green;
-    }
-
-    public virtual void OnServerAddPlayer(NetworkConnection connection, short playerControllerID)
-    {
-        // Check if client 1
-        // Assign color
-        // Assign Start Position
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (health > 0.0f)
->>>>>>> networked_port
         {
             EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
             EnemyControllerScript = (PlayerController)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerController));
@@ -172,7 +144,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         else
-        {   
+        {
             // Check for left/right tap
             if (Input.touchCount > 0)
             {
@@ -202,17 +174,10 @@ public class PlayerController : MonoBehaviour
     {
         arm.transform.position += arm.transform.forward * (damageTotal / 100.0f);
 
-<<<<<<< HEAD
         if (fist.GetComponent<Collider>().bounds.Intersects(EnemyHead.GetComponent<Collider>().bounds))
         {
             EnemyHealthScript.damage(damageTotal);
         }
-=======
-        //if (fist.GetComponent<Collider>().bounds.Intersects(GameObject.FindGameObjectWithTag("BlueHead").GetComponent<Collider>().bounds))
-        //{
-        //    EnemyScript.Damage(damageTotal);
-        //}
->>>>>>> networked_port
     }
 
     // fist = which hand punched
@@ -227,7 +192,6 @@ public class PlayerController : MonoBehaviour
     // True for Left, False for Right
     private void Rotate(bool direction)
     {
-<<<<<<< HEAD
         if (RedTeam)
         {
             if (direction && (transform.rotation.eulerAngles.y < 60.0f || transform.rotation.eulerAngles.y > 290.0f))
@@ -242,11 +206,5 @@ public class PlayerController : MonoBehaviour
             else if (!direction && (transform.rotation.eulerAngles.y > 120.0f && transform.rotation.eulerAngles.y < 250.0f))
                 transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
         }
-=======
-        if (direction)
-            transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
-        else
-            transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
->>>>>>> networked_port
     }
 }
