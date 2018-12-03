@@ -9,6 +9,7 @@ TagManager:
   - RedDude
   - BlueDude
   - Center
+  - Spawn
   layers:
   - Default
   - TransparentFX

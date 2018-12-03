@@ -73,10 +73,11 @@ public class NetworkedPlayerController : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        //this.GetComponent<Material>().color = Color.green
 
         if (isServer)
         {
+            RedTeam = true;
+
             this.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Red");
 
             int numOfChildren = this.transform.childCount;
@@ -85,23 +86,52 @@ public class NetworkedPlayerController : NetworkBehaviour
                 GameObject child = transform.GetChild(i).gameObject;
 
                 if (child.name == "Head")
+                {
                     child.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Heads");
+                }
                 else
+                {
                     if (child.transform.childCount > 0)
-                        transform.GetChild(1).GetComponent<Renderer>
+                    {
+                        GameObject child2 = child.transform.GetChild(0).gameObject;
+                        child2.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Red");
+                    }
                     child.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Red");
+                }
+            }
+        }
+        else if (isClient)
+        {
+            RedTeam = false;    // Client is blue team
+            this.tag = "BlueDude";
+
+            this.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Blue");
+
+            int numOfChildren = this.transform.childCount;
+            for (int i = 0; i < numOfChildren; i++)
+            {
+                GameObject child = transform.GetChild(i).gameObject;
+
+                if (child.name == "Head")
+                {
+                    child.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Heads");
+                    child.tag = "BlueHead";
+                }
+                else
+                {
+                    if (child.transform.childCount > 0)
+                    {
+                        GameObject child2 = child.transform.GetChild(0).gameObject;
+                        child2.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Blue");
+                    }
+                    child.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Blue");
+                }
             }
         }
     }
 
-    public virtual void OnServerAddPlayer(NetworkConnection connection, short playerControllerID)
+    public virtual void OnServerAddPlayer(NetworkConnection conn, short pID)
     {
-        if (isServer)
-        {
-            Debug.Log("Host player added to game");
-        }
-        // Assign color
-        // Assign Start Position
     }
 
     // Update is called once per frame
@@ -127,7 +157,6 @@ public class NetworkedPlayerController : NetworkBehaviour
 
     public void Damage(float damageDone)
     {
-        //Debug.Log("Blue Got Punched" + damageDone);
         if (health > 0.0f)
         {
             health -= damageDone;
@@ -260,9 +289,19 @@ public class NetworkedPlayerController : NetworkBehaviour
     // True for Left, False for Right
     private void Rotate(bool direction)
     {
-        if (direction)
-            transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        if (RedTeam)
+        {
+            if (direction && (transform.rotation.eulerAngles.y < 60.0f || transform.rotation.eulerAngles.y > 290.0f))
+                transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+            else if (!direction && (transform.rotation.eulerAngles.y > 300.0f || transform.rotation.eulerAngles.y < 70.0f))
+                transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        }
         else
-            transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        {
+            if (direction && (transform.rotation.eulerAngles.y < 240.0f && transform.rotation.eulerAngles.y > 110.0f))
+                transform.RotateAround(mCenter, new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+            else if (!direction && (transform.rotation.eulerAngles.y > 120.0f && transform.rotation.eulerAngles.y < 250.0f))
+                transform.RotateAround(mCenter, -new Vector3(0, 0.5f, 0), 180 * Time.deltaTime);
+        }
     }
 }
