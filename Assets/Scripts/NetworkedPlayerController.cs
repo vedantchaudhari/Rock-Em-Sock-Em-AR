@@ -10,12 +10,6 @@ public class NetworkedPlayerController : NetworkBehaviour
      * Network Enabled
      */
 
-    // Control Definitions
-    const KeyCode LEFT_MOVE_KEY = KeyCode.A;
-    const KeyCode RIGHT_MOVE_KEY = KeyCode.D;
-    const KeyCode LEFT_PUNCH_KEY = KeyCode.Q;
-    const KeyCode RIGHT_PUNCH_KEY = KeyCode.E;
-
     public Transform mTarget;
 
     private Vector3 mCenter;
@@ -79,12 +73,33 @@ public class NetworkedPlayerController : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        //this.GetComponent<Material>().color = Color.green;
+        //this.GetComponent<Material>().color = Color.green
+
+        if (isServer)
+        {
+            this.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Red");
+
+            int numOfChildren = this.transform.childCount;
+            for (int i = 0; i < numOfChildren; i++)
+            {
+                GameObject child = transform.GetChild(i).gameObject;
+
+                if (child.name == "Head")
+                    child.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Heads");
+                else
+                    if (child.transform.childCount > 0)
+                        transform.GetChild(1).GetComponent<Renderer>
+                    child.GetComponent<Renderer>().material = Resources.Load<Material>("Materials/Mat_Red");
+            }
+        }
     }
 
     public virtual void OnServerAddPlayer(NetworkConnection connection, short playerControllerID)
     {
-        // Check if client 1
+        if (isServer)
+        {
+            Debug.Log("Host player added to game");
+        }
         // Assign color
         // Assign Start Position
     }
