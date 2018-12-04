@@ -4,14 +4,20 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class GameManagerPhoton : Photon.Pun.MonoBehaviourPunCallbacks
+public class GameManagerPhoton : MonoBehaviourPunCallbacks
 {
+    public static GameManagerPhoton Instance;
+
+    public GameObject redRobot;
+    public GameObject blueRobot;
+    public GameObject[] Spawns;
+
     #region Photon Messages
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
-        Debug.LogFormat("OnPlayerEnteredRoom() {0}", newPlayer.NickName);
+        Debug.LogFormat("GameManager: OnPlayerEnteredRoom() {0}", newPlayer.NickName);
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -23,18 +29,43 @@ public class GameManagerPhoton : Photon.Pun.MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         base.OnPlayerLeftRoom(otherPlayer);
-        Debug.LogFormat("OnPlayerLeftRoom() {0}", otherPlayer.NickName);
+        Debug.LogFormat("GameManager: OnPlayerLeftRoom() {0}", otherPlayer.NickName);
 
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.LogFormat("OnPlayerEntered() IsMasterClient {0}", PhotonNetwork.IsMasterClient);
+            Debug.LogFormat("GameManager: OnPlayerEntered() IsMasterClient {0}", PhotonNetwork.IsMasterClient);
             LoadArena();
         }
     }
 
     #endregion
 
+    #region MonoBehaviour Callbacks
+
+    private void Start()
+    {
+        Instance = this;
+
+        Debug.Log(PhotonNetwork.IsMasterClient);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Instantiate(redRobot.name, Spawns[0].transform.position, Quaternion.identity, 0);
+        }
+    }
+
+    private void Awake()
+    {
+
+    }
+
+    #endregion
+
     #region Public Methods
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
 
     #endregion
 
