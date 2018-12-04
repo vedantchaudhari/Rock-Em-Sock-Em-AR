@@ -46,10 +46,13 @@ public class GameManagerPhoton : MonoBehaviourPunCallbacks
     {
         Instance = this;
 
-        Debug.Log(PhotonNetwork.IsMasterClient);
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonNetwork.Instantiate(redRobot.name, Spawns[0].transform.position, Quaternion.identity, 0);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate(blueRobot.name, Spawns[1].transform.position, Quaternion.identity, 0);
         }
     }
 
@@ -79,7 +82,7 @@ public class GameManagerPhoton : MonoBehaviourPunCallbacks
             return;
         }
 
-        PhotonNetwork.LoadLevel(0); // Load base arena
+        PhotonNetwork.LoadLevel(1); // Load base arena
     }
 
     #endregion
