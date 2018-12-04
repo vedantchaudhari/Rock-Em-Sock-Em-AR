@@ -36,7 +36,7 @@ public class NetworkManager : MonoBehaviour
     {
         if (PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.JoinRandomRoom();
+            PhotonNetwork.JoinRandom    Room();
         }
         else
         {
