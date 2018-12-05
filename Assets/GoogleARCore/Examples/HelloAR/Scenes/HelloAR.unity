@@ -276,8 +276,8 @@ MonoBehaviour:
   FirstPersonCamera: {fileID: 896679035}
   DetectedPlanePrefab: {fileID: 1654175882956584, guid: 6a35c744e5010405c847fad90282d2be,
     type: 3}
-  RedRobot: {fileID: 1366773506549584, guid: 2799a1841ff8f4f41b74cf360953b6b4, type: 3}
-  BlueRobot: {fileID: 1689264462781560, guid: 9bb9ae244de589540adc9f32f0663be2, type: 3}
+  RedRobot: {fileID: 120, guid: c8c75751b87285c45898edebf27a19c8, type: 3}
+  BlueRobot: {fileID: 111, guid: eab33fdf885a90247ac4e67a6ddccbc5, type: 3}
   Arena: {fileID: 3181179781362423190, guid: 388451ce6abc58d4582947330999755c, type: 3}
   SearchingForPlaneUI: {fileID: 1133631540}
 --- !u!20 &896679035 stripped

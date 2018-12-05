@@ -130,7 +130,7 @@ namespace GoogleARCore.Examples.HelloAR
                     var Stage = Instantiate(Arena, hit.Pose.position, hit.Pose.rotation);
 
                     Vector3 pos = Stage.transform.position;
-                    pos.x = Stage.transform.position.x + 1.268f * RedRobot.transform.localScale.x;
+                    pos.x = Stage.transform.position.x + 1.218f * RedRobot.transform.localScale.x;
                     pos.y = pos.y + (RedRobot.transform.localScale.y * 0.5f);
 
                     var Red = Instantiate(RedRobot, pos, Stage.transform.rotation);
@@ -160,9 +160,9 @@ namespace GoogleARCore.Examples.HelloAR
 
                     Blue.transform.localRotation = rot;
 
-                    Blue.transform.localPosition = new Vector3(Stage.transform.localPosition.x - (1.268f * BlueRobot.transform.localScale.x), 0.0f, 0.0f);
+                    Blue.transform.localPosition = new Vector3(Stage.transform.localPosition.x - (1.218f * BlueRobot.transform.localScale.x), 0.0f, 0.0f);
 
-                    Red.transform.localPosition = new Vector3(Stage.transform.localPosition.x + (1.268f * RedRobot.transform.localScale.x), 0.0f, 0.0f);
+                    Red.transform.localPosition = new Vector3(Stage.transform.localPosition.x + (1.218f * RedRobot.transform.localScale.x), 0.0f, 0.0f);
                 }
             }
         }
