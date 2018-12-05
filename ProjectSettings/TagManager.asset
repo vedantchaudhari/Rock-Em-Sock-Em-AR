@@ -10,7 +10,6 @@ TagManager:
   - BlueDude
   - Center
   - Spawn
-  - HealthText
   layers:
   - Default
   - TransparentFX
