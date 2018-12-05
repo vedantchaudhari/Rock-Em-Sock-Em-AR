@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 528}
   - component: {fileID: 448}
   - component: {fileID: 612}
-  - component: {fileID: 693}
-  - component: {fileID: 698}
+  - component: {fileID: 665}
+  - component: {fileID: 668}
   m_Layer: 0
   m_Name: LeftHand
   m_TagString: Untagged
@@ -93,7 +93,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &693
+--- !u!114 &665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,11 +111,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 698}
-  viewIdField: 8
-  InstantiationId: 8
+  - {fileID: 668}
+  viewIdField: 2
+  InstantiationId: 2
   isRuntimeInstantiated: 0
---- !u!114 &698
+--- !u!114 &668
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,6 +142,8 @@ GameObject:
   - component: {fileID: 525}
   - component: {fileID: 447}
   - component: {fileID: 611}
+  - component: {fileID: 676}
+  - component: {fileID: 675}
   m_Layer: 0
   m_Name: Head
   m_TagString: BlueHead
@@ -221,6 +223,43 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 675}
+  viewIdField: 3
+  InstantiationId: 3
+  isRuntimeInstantiated: 0
+--- !u!114 &675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!1 &106
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,8 +272,8 @@ GameObject:
   - component: {fileID: 524}
   - component: {fileID: 446}
   - component: {fileID: 614}
-  - component: {fileID: 701}
-  - component: {fileID: 702}
+  - component: {fileID: 672}
+  - component: {fileID: 673}
   m_Layer: 0
   m_Name: RightExtendo
   m_TagString: Untagged
@@ -315,7 +354,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &701
+--- !u!114 &672
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,11 +372,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 702}
-  viewIdField: 9
-  InstantiationId: 9
+  - {fileID: 673}
+  viewIdField: 4
+  InstantiationId: 4
   isRuntimeInstantiated: 0
---- !u!114 &702
+--- !u!114 &673
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -579,7 +618,6 @@ GameObject:
   - component: {fileID: 450}
   - component: {fileID: 603}
   - component: {fileID: 651}
-  - component: {fileID: 652}
   - component: {fileID: 653}
   - component: {fileID: 658}
   m_Layer: 0
@@ -680,20 +718,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdf4cfe23c33b4786a1c303f083733bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DeadMaterial: {fileID: 2100000, guid: 3422467ec90f269418e19b77eb00b0d7, type: 2}
-  MyHead: {fileID: 105}
---- !u!114 &652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -704,8 +728,9 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 653}
-  viewIdField: 2
-  InstantiationId: 2
+  - {fileID: 658}
+  viewIdField: 1
+  InstantiationId: 1
   isRuntimeInstantiated: 0
 --- !u!114 &653
 MonoBehaviour:
@@ -735,6 +760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mCenter: {x: 0, y: 0, z: 0}
+  Head: {fileID: 105}
   RightArm: {fileID: 106}
   LeftArm: {fileID: 113}
   RightHand: {fileID: 112}
@@ -745,6 +771,7 @@ MonoBehaviour:
   MoveRightButton: 108
   PunchLeftButton: 117
   PunchRightButton: 111
+  healthText: {fileID: 0}
   isRedTeam: 0
 --- !u!1 &112
 GameObject:
@@ -758,8 +785,8 @@ GameObject:
   - component: {fileID: 531}
   - component: {fileID: 452}
   - component: {fileID: 615}
-  - component: {fileID: 687}
-  - component: {fileID: 699}
+  - component: {fileID: 661}
+  - component: {fileID: 669}
   m_Layer: 0
   m_Name: RightHand
   m_TagString: Untagged
@@ -839,7 +866,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &687
+--- !u!114 &661
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -857,11 +884,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 699}
-  viewIdField: 10
-  InstantiationId: 10
+  - {fileID: 669}
+  viewIdField: 5
+  InstantiationId: 5
   isRuntimeInstantiated: 0
---- !u!114 &699
+--- !u!114 &669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -888,8 +915,8 @@ GameObject:
   - component: {fileID: 526}
   - component: {fileID: 445}
   - component: {fileID: 613}
-  - component: {fileID: 700}
-  - component: {fileID: 694}
+  - component: {fileID: 670}
+  - component: {fileID: 667}
   m_Layer: 0
   m_Name: LeftExtendo
   m_TagString: Untagged
@@ -970,7 +997,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &700
+--- !u!114 &670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -988,11 +1015,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 694}
-  viewIdField: 7
-  InstantiationId: 7
+  - {fileID: 667}
+  viewIdField: 6
+  InstantiationId: 6
   isRuntimeInstantiated: 0
---- !u!114 &694
+--- !u!114 &667
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

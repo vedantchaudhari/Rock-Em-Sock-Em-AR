@@ -7,7 +7,6 @@ using Photon.Realtime;
 public class GameManagerPhoton : MonoBehaviourPunCallbacks
 {
     public static GameManagerPhoton Instance;
-
     public GameObject redRobot;
     public GameObject blueRobot;
     public GameObject[] Spawns;
@@ -45,6 +44,7 @@ public class GameManagerPhoton : MonoBehaviourPunCallbacks
     private void Start()
     {
         Instance = this;
+        
         Debug.LogAssertionFormat("Local Player is MasterClient: {0}", PhotonNetwork.IsMasterClient);
 
         if (PhotonNetwork.IsMasterClient && NetworkedPlayerControllerPhoton.localPlayerInstance == null)

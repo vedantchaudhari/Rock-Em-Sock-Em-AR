@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class PlayerState : MonoBehaviour {
+using Photon.Pun;
+public class PlayerState : MonoBehaviourPunCallbacks {
 
 	private float mHealth = 300;
 
@@ -20,10 +20,10 @@ public class PlayerState : MonoBehaviour {
     {
 		mHealth -= damageAmount;
         MyHead.transform.position += new Vector3(0.0f, damageAmount / 600.0f, 0.0f);
-        if (mHealth < 0.0f)
-        {
-            Dead();
-        }
+        //if (mHealth < 0.0f)
+        //{
+        //    Dead();
+        //}
     }
 
     private void Dead()

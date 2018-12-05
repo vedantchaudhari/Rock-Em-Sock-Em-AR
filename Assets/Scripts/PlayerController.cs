@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         // ****TODO: Rewrite
         mCenter = mTarget.transform.position;
-        
+
         if (RedTeam)
         {
             EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
@@ -157,7 +157,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else if (currTouch.position.x > Screen.width / 2)   // Punch right
                 {
-
                 }
             }
             // Check if tilted left/right
