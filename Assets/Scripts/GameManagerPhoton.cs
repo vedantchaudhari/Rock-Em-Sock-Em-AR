@@ -45,17 +45,21 @@ public class GameManagerPhoton : MonoBehaviourPunCallbacks
     private void Start()
     {
         Instance = this;
+        Debug.LogAssertionFormat("Local Player is MasterClient: {0}", PhotonNetwork.IsMasterClient);
 
-        Debug.Log(PhotonNetwork.IsMasterClient);
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && NetworkedPlayerControllerPhoton.localPlayerInstance == null)
         {
             PhotonNetwork.Instantiate(redRobot.name, Spawns[0].transform.position, Quaternion.identity, 0);
+        }
+        else if (NetworkedPlayerControllerPhoton.localPlayerInstance == null)
+        {
+            PhotonNetwork.Instantiate(blueRobot.name, Spawns[1].transform.position, Quaternion.identity * Quaternion.Euler(0f, 180f, 0f), 0);
         }
     }
 
     private void Awake()
     {
-
+        
     }
 
     #endregion
@@ -79,7 +83,7 @@ public class GameManagerPhoton : MonoBehaviourPunCallbacks
             return;
         }
 
-        PhotonNetwork.LoadLevel(0); // Load base arena
+        PhotonNetwork.LoadLevel(1); // Load base arena
     }
 
     #endregion

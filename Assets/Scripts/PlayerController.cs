@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
         mTarget = GameObject.FindGameObjectWithTag("Center");
 
         mCenter = mTarget.transform.position;
+        
         if (RedTeam)
         {
             EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
