@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public Transform mTarget;
+    public GameObject mTarget;
 
     private Vector3 mCenter;
     private float mRadius = 4.0f;
@@ -50,7 +50,8 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        // ****TODO: Rewrite
+        mTarget = GameObject.FindGameObjectWithTag("Center");
+
         mCenter = mTarget.transform.position;
         if (RedTeam)
         {
