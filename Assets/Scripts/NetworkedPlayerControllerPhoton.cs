@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 
 public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunObservable
@@ -9,6 +10,7 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
     public static GameObject localPlayerInstance;
     public Vector3 mCenter;
 
+    public GameObject Head;
     public GameObject RightArm;
     public GameObject LeftArm;
     public GameObject RightHand;
@@ -20,7 +22,7 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
     public KeyCode MoveRightButton;
     public KeyCode PunchLeftButton;
     public KeyCode PunchRightButton;
-
+    public Text healthText;
     public bool isRedTeam;
 
     #endregion
@@ -38,8 +40,12 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
     private PlayerState EnemyHealthScript;
     private NetworkedPlayerControllerPhoton EnemyControllerScript;
     private GameObject EnemyHead;
-
     private bool didLoadEnemyData = false;
+    private float health = 300.0f;
+
+    /* Networked Variables */
+    private bool isDamaged = false;
+    private float dmgAmountNet;
 
     #endregion
 
@@ -51,7 +57,7 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
 
     void Awake()
     {
-        PhotonNetwork.SendRate = 60;
+        PhotonNetwork.SendRate = 30;
 
         if (photonView.IsMine)
         {
@@ -65,6 +71,7 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
     void Start()
     {
         mCenter = GameObject.FindGameObjectWithTag("Center").transform.position;
+        healthText = GameObject.FindGameObjectWithTag("HealthText").GetComponent<Text>();
     }
 
     // Update is called once per frame
@@ -75,16 +82,15 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
         {
             if (isRedTeam)
             {
-                EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(PlayerState));
                 EnemyControllerScript = (NetworkedPlayerControllerPhoton)GameObject.FindGameObjectWithTag("BlueDude").GetComponent(typeof(NetworkedPlayerControllerPhoton));
                 EnemyHead = GameObject.FindGameObjectWithTag("BlueHead");
-                Debug.Log("EnemyHead: " + EnemyHead.name);
+                didLoadEnemyData = true;
             }
             else
             {
-                EnemyHealthScript = (PlayerState)GameObject.FindGameObjectWithTag("RedDude").GetComponent(typeof(PlayerState));
                 EnemyControllerScript = (NetworkedPlayerControllerPhoton)GameObject.FindGameObjectWithTag("RedDude").GetComponent(typeof(NetworkedPlayerControllerPhoton));
                 EnemyHead = GameObject.FindGameObjectWithTag("RedHead");
+                didLoadEnemyData = true;
             }
         }
 
@@ -92,10 +98,13 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
         {
             GetInput();
         }
-        else
+        if (health <= 0.0f)
         {
-            return;
+            Debug.Log("ACTIONS SPEAK LOUDER THAN WORDS, LET ME TRY THIS SHIT\nDEAD");
+            GameManagerPhoton.Instance.LeaveRoom();
         }
+
+        healthText.text = "Health: " + health;
     }
 
     #endregion
@@ -179,7 +188,10 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
 
         if (fist.GetComponent<Collider>().bounds.Intersects(EnemyHead.GetComponent<Collider>().bounds))
         {
-            EnemyHealthScript.damage(damageTotal);
+            Debug.LogAssertionFormat("Local player {0} damaged enemy for {1} health", localPlayerInstance.name, damageTotal);
+
+            dmgAmountNet = damageTotal;
+            isDamaged = true;   // Flag to send over networked
         }
     }
 
@@ -210,6 +222,15 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
         }
     }
 
+    private void Damage(float amount)
+    {
+        health -= amount;
+        Debug.Log("Current Health is: " + health);
+        //Head.GetPhotonView().transform.position += new Vector3(0.00ff, amount / 600.0f, 0.);
+        //head.transform.position  += new Vector3(0.0f, 150.0f + (amount / 60.0f), 0.0f);
+        Debug.Log(Head.transform.position);
+    }
+
     #endregion
 
     #region IPunObservable Implementation
@@ -218,10 +239,22 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
     {
         if (stream.IsWriting)   // We own this player, send other player data
         {
+            // Send damage
+            stream.SendNext(isDamaged);
+            stream.SendNext(dmgAmountNet);
+
+            isDamaged = false;
+            dmgAmountNet = 0;
         }
-        else
+        else    // Networked Player
         {
-            // This is the network player, receive data
+            bool isDamage = (bool)stream.ReceiveNext();
+            float damage = (float)stream.ReceiveNext();
+
+            if (isDamage == true)
+            {
+                Damage(damage);
+            }
         }
     }
 
