@@ -58,6 +58,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
         Debug.Log("NetworkManager: OnJoinedRoom() called by PUN. This client is now connected to a room");
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            PhotonNetwork.LoadLevel(1);
+        }
     }
 
     #endregion
