@@ -11,6 +11,7 @@ TagManager:
   - Center
   - Spawn
   - HealthText
+  - PlaneGenerator
   layers:
   - Default
   - TransparentFX

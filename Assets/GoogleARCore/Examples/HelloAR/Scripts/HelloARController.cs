@@ -66,6 +66,16 @@ namespace GoogleARCore.Examples.HelloAR
         public GameObject SearchingForPlaneUI;
 
         /// <summary>
+        /// True if the robots and arena have been created.
+        /// </summary>
+        public bool CreatedMatch = false;
+
+        /// <summary>
+        /// The plane generator script so we can turn off plane detecting
+        /// </summary>
+        public GameObject planeGeneratorObj;
+
+        /// <summary>
         /// The rotation in degrees need to apply to model when the Andy model is placed.
         /// </summary>
         private const float k_ModelRotation = 180.0f;
@@ -81,6 +91,11 @@ namespace GoogleARCore.Examples.HelloAR
         /// </summary>
         private bool m_IsQuitting = false;
 
+        private void Start()
+        {
+            planeGeneratorObj = GameObject.FindGameObjectWithTag("PlaneGenerator");
+        }
+
         /// <summary>
         /// The Unity Update() method.
         /// </summary>
@@ -88,20 +103,22 @@ namespace GoogleARCore.Examples.HelloAR
         {
             _UpdateApplicationLifecycle();
 
-            // Hide snackbar when currently tracking at least one plane.
-            Session.GetTrackables<DetectedPlane>(m_AllPlanes);
-            bool showSearchingUI = true;
-            for (int i = 0; i < m_AllPlanes.Count; i++)
+            if (!CreatedMatch)
             {
-                if (m_AllPlanes[i].TrackingState == TrackingState.Tracking)
+                // Hide snackbar when currently tracking at least one plane.
+                Session.GetTrackables<DetectedPlane>(m_AllPlanes);
+                bool showSearchingUI = true;
+                for (int i = 0; i < m_AllPlanes.Count; i++)
                 {
-                    showSearchingUI = false;
-                    break;
+                    if (m_AllPlanes[i].TrackingState == TrackingState.Tracking)
+                    {
+                        showSearchingUI = false;
+                        break;
+                    }
                 }
+
+                SearchingForPlaneUI.SetActive(showSearchingUI);
             }
-
-            SearchingForPlaneUI.SetActive(showSearchingUI);
-
             // If the player has not touched the screen, we are done with this update.
             Touch touch;
             if (Input.touchCount < 1 || (touch = Input.GetTouch(0)).phase != TouchPhase.Began)
@@ -124,7 +141,7 @@ namespace GoogleARCore.Examples.HelloAR
                 {
                     Debug.Log("Hit at back of the current DetectedPlane");
                 }
-                else
+                else if (!CreatedMatch)
                 {
                     // Instantiate Andy model at the hit pose.
                     var Stage = Instantiate(Arena, hit.Pose.position, hit.Pose.rotation);
@@ -146,7 +163,7 @@ namespace GoogleARCore.Examples.HelloAR
                     // world evolves.
                     var anchor = hit.Trackable.CreateAnchor(hit.Pose);
                     
-                    // Make Andy model a child of the anchor.
+                    // Make New Prefabs model a child of the anchor.
                     Stage.transform.parent = anchor.transform;
                     Red.transform.parent = anchor.transform;
                     Blue.transform.parent = anchor.transform;
@@ -160,9 +177,13 @@ namespace GoogleARCore.Examples.HelloAR
 
                     Blue.transform.localRotation = rot;
 
-                    Blue.transform.localPosition = new Vector3(Stage.transform.localPosition.x - (1.268f * BlueRobot.transform.localScale.x), 0.0f, 0.0f);
+                    Blue.transform.localPosition = new Vector3(Stage.transform.localPosition.x - (1.268f * BlueRobot.transform.localScale.x), BlueRobot.transform.localScale.y / 2, 0.0f);
 
-                    Red.transform.localPosition = new Vector3(Stage.transform.localPosition.x + (1.268f * RedRobot.transform.localScale.x), 0.0f, 0.0f);
+                    Red.transform.localPosition = new Vector3(Stage.transform.localPosition.x + (1.268f * RedRobot.transform.localScale.x), RedRobot.transform.localScale.y / 2, 0.0f);
+
+                    CreatedMatch = true;
+
+                    planeGeneratorObj.GetComponent<DetectedPlaneGenerator>().StopDetecting = true;
                 }
             }
         }

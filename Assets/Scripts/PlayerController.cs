@@ -155,9 +155,51 @@ public class PlayerController : MonoBehaviour
 
                 if (currTouch.position.x < Screen.width / 2)        // Punch left
                 {
+                    if (LeftPunch)
+                    {
+                        Punch(LeftArm, LeftHand, LeftArmDistance);
+                        LeftPunch = false;
+                        LeftArmDistance = 0.0f;
+                        LeftParam = 0.0f;
+                    }
                 }
-                else if (currTouch.position.x > Screen.width / 2)   // Punch right
+                else
                 {
+                    if (!LeftPunch)
+                    {
+                        LeftPunch = true;
+                        LeftExtendedLocation = LeftArm.transform.position;
+                    }
+                    if (LeftArmDistance < 100.0f)
+                    {
+                        LeftParam += Time.deltaTime * speed;
+                        LeftArmDistance = Mathf.Lerp(0.0f, 100.0f, LeftParam);
+                        ResetPunchSlow(LeftArm, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
+                    }
+                }
+                if (currTouch.position.x > Screen.width / 2)   // Punch right
+                {
+                    if (RightPunch)
+                    {
+                        Punch(RightArm, RightHand, RightArmDistance);
+                        RightPunch = false;
+                        RightArmDistance = 0.0f;
+                        RightParam = 0.0f;
+                    }
+                }
+                else
+                {
+                    if (!RightPunch)
+                    {
+                        RightPunch = true;
+                        RightExtendedLocation = RightArm.transform.position;
+                    }
+                    if (RightArmDistance < 100.0f)
+                    {
+                        RightParam += Time.deltaTime * speed;
+                        RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
+                        ResetPunchSlow(RightArm, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
+                    }
                 }
             }
             // Check if tilted left/right
