@@ -141,7 +141,6 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
                 {
                     LeftPunch = true;
                     LeftExtendedLocation = LeftArm.transform.position;
-                    //ResetPunchFull(LeftArmPunch);
                 }
                 if (LeftArmDistance < 100.0f)
                 {
@@ -166,7 +165,6 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
                 {
                     RightPunch = true;
                     RightExtendedLocation = RightArm.transform.position;
-                    //ResetPunchFull(RightArmPunch);
                 }
                 if (RightArmDistance < 100.0f)
                 {
@@ -178,7 +176,69 @@ public class NetworkedPlayerControllerPhoton : MonoBehaviourPunCallbacks, IPunOb
         }
         else
         {
-            
+            // Check for left/right tap
+            if (Input.touchCount > 0)
+            {
+                Touch currTouch = Input.GetTouch(0);
+
+                if (currTouch.position.x < Screen.width / 2)        // Punch left
+                {
+                    if (LeftPunch)
+                    {
+                        Punch(LeftArm, LeftHand, LeftArmDistance);
+                        LeftPunch = false;
+                        LeftArmDistance = 0.0f;
+                        LeftParam = 0.0f;
+                    }
+                }
+                else
+                {
+                    if (!LeftPunch)
+                    {
+                        LeftPunch = true;
+                        LeftExtendedLocation = LeftArm.transform.position;
+                    }
+                    if (LeftArmDistance < 100.0f)
+                    {
+                        LeftParam += Time.deltaTime * speed;
+                        LeftArmDistance = Mathf.Lerp(0.0f, 100.0f, LeftParam);
+                        ResetPunchSlow(LeftArm, LeftExtendedLocation, LeftResetLocation.transform.position, LeftParam);
+                    }
+                }
+                if (currTouch.position.x > Screen.width / 2)   // Punch right
+                {
+                    if (RightPunch)
+                    {
+                        Punch(RightArm, RightHand, RightArmDistance);
+                        RightPunch = false;
+                        RightArmDistance = 0.0f;
+                        RightParam = 0.0f;
+                    }
+                }
+                else
+                {
+                    if (!RightPunch)
+                    {
+                        RightPunch = true;
+                        RightExtendedLocation = RightArm.transform.position;
+                    }
+                    if (RightArmDistance < 100.0f)
+                    {
+                        RightParam += Time.deltaTime * speed;
+                        RightArmDistance = Mathf.Lerp(0.0f, 100.0f, RightParam);
+                        ResetPunchSlow(RightArm, RightExtendedLocation, RightResetLocation.transform.position, RightParam);
+                    }
+                }
+            }
+            // Check if tilted left/right
+            if (Input.acceleration.x > 0.1f)        // Move right
+            {
+                Rotate(false);
+            }
+            else if (Input.acceleration.x < -0.1f)  // Move left
+            {
+                Rotate(true);
+            }
         }
     }
 

@@ -112,7 +112,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 657}
-  viewIdField: 9
+  viewIdField: 0
   InstantiationId: 9
   isRuntimeInstantiated: 0
 --- !u!114 &657
@@ -242,7 +242,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 674}
-  viewIdField: 10
+  viewIdField: 0
   InstantiationId: 10
   isRuntimeInstantiated: 0
 --- !u!114 &674
@@ -373,7 +373,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 656}
-  viewIdField: 11
+  viewIdField: 0
   InstantiationId: 11
   isRuntimeInstantiated: 0
 --- !u!114 &656
@@ -652,7 +652,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 654}
   - {fileID: 655}
-  viewIdField: 8
+  viewIdField: 0
   InstantiationId: 8
   isRuntimeInstantiated: 0
 --- !u!114 &654
@@ -885,7 +885,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 662}
-  viewIdField: 12
+  viewIdField: 0
   InstantiationId: 12
   isRuntimeInstantiated: 0
 --- !u!114 &662
@@ -1016,7 +1016,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 659}
-  viewIdField: 7
+  viewIdField: 0
   InstantiationId: 7
   isRuntimeInstantiated: 0
 --- !u!114 &659
