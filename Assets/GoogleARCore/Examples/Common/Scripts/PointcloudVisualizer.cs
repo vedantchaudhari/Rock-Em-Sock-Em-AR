@@ -33,6 +33,8 @@ namespace GoogleARCore.Examples.Common
 
         private Vector3[] m_Points = new Vector3[k_MaxPointCount];
 
+        public bool StopDetecting = false;
+
         /// <summary>
         /// Unity start.
         /// </summary>
@@ -47,25 +49,32 @@ namespace GoogleARCore.Examples.Common
         /// </summary>
         public void Update()
         {
-            // Fill in the data to draw the point cloud.
-            if (Frame.PointCloud.IsUpdatedThisFrame)
+            if (!StopDetecting)
             {
-                // Copy the point cloud points for mesh verticies.
-                for (int i = 0; i < Frame.PointCloud.PointCount; i++)
+                // Fill in the data to draw the point cloud.
+                if (Frame.PointCloud.IsUpdatedThisFrame)
                 {
-                    m_Points[i] = Frame.PointCloud.GetPointAsStruct(i);
-                }
+                    // Copy the point cloud points for mesh verticies.
+                    for (int i = 0; i < Frame.PointCloud.PointCount; i++)
+                    {
+                        m_Points[i] = Frame.PointCloud.GetPointAsStruct(i);
+                    }
 
-                // Update the mesh indicies array.
-                int[] indices = new int[Frame.PointCloud.PointCount];
-                for (int i = 0; i < Frame.PointCloud.PointCount; i++)
-                {
-                    indices[i] = i;
-                }
+                    // Update the mesh indicies array.
+                    int[] indices = new int[Frame.PointCloud.PointCount];
+                    for (int i = 0; i < Frame.PointCloud.PointCount; i++)
+                    {
+                        indices[i] = i;
+                    }
 
+                    m_Mesh.Clear();
+                    m_Mesh.vertices = m_Points;
+                    m_Mesh.SetIndices(indices, MeshTopology.Points, 0);
+                }
+            }
+            else
+            {
                 m_Mesh.Clear();
-                m_Mesh.vertices = m_Points;
-                m_Mesh.SetIndices(indices, MeshTopology.Points, 0);
             }
         }
     }

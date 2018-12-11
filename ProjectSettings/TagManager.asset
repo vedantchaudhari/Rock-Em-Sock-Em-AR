@@ -4,13 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - RedHead
-  - BlueHead
-  - RedDude
-  - BlueDude
   - Center
-  - Spawn
-  - HealthText
+  - BlueHead
+  - BlueDude
+  - RedHead
+  - RedDude
   - PlaneGenerator
   layers:
   - Default

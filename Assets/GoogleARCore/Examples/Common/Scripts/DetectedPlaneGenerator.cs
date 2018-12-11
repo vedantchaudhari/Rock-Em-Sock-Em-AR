@@ -40,9 +40,6 @@ namespace GoogleARCore.Examples.Common
         /// </summary>
         private List<DetectedPlane> m_NewPlanes = new List<DetectedPlane>();
 
-        /// <summary>
-        /// A bool for whether we should still be detecting planes.
-        /// </summary>
         public bool StopDetecting = false;
 
         /// <summary>

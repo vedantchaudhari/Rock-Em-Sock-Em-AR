@@ -155,10 +155,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ARCore Device
       objectReference: {fileID: 0}
-    - target: {fileID: 4442908887562770, guid: c10877f7cd5764de18d46d7b777d1faa, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c10877f7cd5764de18d46d7b777d1faa, type: 3}
 --- !u!1 &557169198
@@ -276,10 +272,15 @@ MonoBehaviour:
   FirstPersonCamera: {fileID: 896679035}
   DetectedPlanePrefab: {fileID: 1654175882956584, guid: 6a35c744e5010405c847fad90282d2be,
     type: 3}
-  RedRobot: {fileID: 1366773506549584, guid: 2799a1841ff8f4f41b74cf360953b6b4, type: 3}
-  BlueRobot: {fileID: 1689264462781560, guid: 9bb9ae244de589540adc9f32f0663be2, type: 3}
+  RedRobot: {fileID: 3032863157133860309, guid: a1306cca1ca36ee49a3b6c593c6a641c,
+    type: 3}
+  BlueRobot: {fileID: 9203359391836010168, guid: 9a6d0795bf4be654ab643636018e46e0,
+    type: 3}
   Arena: {fileID: 3181179781362423190, guid: 388451ce6abc58d4582947330999755c, type: 3}
   SearchingForPlaneUI: {fileID: 1133631540}
+  CreatedMatch: 0
+  planeGeneratorObj: {fileID: 2083512464}
+  pointGeneratorObj: {fileID: 1759795985}
 --- !u!20 &896679035 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 20155940112608238, guid: c10877f7cd5764de18d46d7b777d1faa,
@@ -635,6 +636,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d5645b79cc5e4251827ffe171ed4658, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StopDetecting: 0
 --- !u!33 &1759795988
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -748,7 +750,7 @@ GameObject:
   - component: {fileID: 2083512465}
   m_Layer: 0
   m_Name: Plane Generator
-  m_TagString: Untagged
+  m_TagString: PlaneGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -767,6 +769,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DetectedPlanePrefab: {fileID: 1654175882956584, guid: 6a35c744e5010405c847fad90282d2be,
     type: 3}
+  StopDetecting: 0
 --- !u!4 &2083512466
 Transform:
   m_ObjectHideFlags: 0

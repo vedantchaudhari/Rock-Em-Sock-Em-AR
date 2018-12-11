@@ -76,6 +76,11 @@ namespace GoogleARCore.Examples.HelloAR
         public GameObject planeGeneratorObj;
 
         /// <summary>
+        /// The point generator script so we can turn off point detecting
+        /// </summary>
+        public GameObject pointGeneratorObj;
+
+        /// <summary>
         /// The rotation in degrees need to apply to model when the Andy model is placed.
         /// </summary>
         private const float k_ModelRotation = 180.0f;
@@ -93,7 +98,9 @@ namespace GoogleARCore.Examples.HelloAR
 
         private void Start()
         {
-            planeGeneratorObj = GameObject.FindGameObjectWithTag("PlaneGenerator");
+            Screen.orientation = ScreenOrientation.LandscapeLeft;
+            //planeGeneratorObj = GameObject.FindGameObjectWithTag("PlaneGenerator");
+            //pointGeneratorObj = GameObject.FindGameObjectWithTag("PointGenerator");
         }
 
         /// <summary>
@@ -143,11 +150,11 @@ namespace GoogleARCore.Examples.HelloAR
                 }
                 else if (!CreatedMatch)
                 {
-                    // Instantiate Andy model at the hit pose.
+                    // Instantiate robot models and arena at the hit pose.
                     var Stage = Instantiate(Arena, hit.Pose.position, hit.Pose.rotation);
 
                     Vector3 pos = Stage.transform.position;
-                    pos.x = Stage.transform.position.x + 1.268f * RedRobot.transform.localScale.x;
+                    pos.x = Stage.transform.position.x + 1.218f * RedRobot.transform.localScale.x;
                     pos.y = pos.y + (RedRobot.transform.localScale.y * 0.5f);
 
                     var Red = Instantiate(RedRobot, pos, Stage.transform.rotation);
@@ -169,6 +176,7 @@ namespace GoogleARCore.Examples.HelloAR
                     Blue.transform.parent = anchor.transform;
 
 
+                    // fix rotation of actors
                     Quaternion rot = Stage.transform.rotation;
 
                     rot.x = 0.0f;
@@ -177,13 +185,17 @@ namespace GoogleARCore.Examples.HelloAR
 
                     Blue.transform.localRotation = rot;
 
-                    Blue.transform.localPosition = new Vector3(Stage.transform.localPosition.x - (1.268f * BlueRobot.transform.localScale.x), BlueRobot.transform.localScale.y / 2, 0.0f);
+                    // fix the robots postions
+                    Blue.transform.localPosition = new Vector3(Stage.transform.localPosition.x - (1.218f * BlueRobot.transform.localScale.x), BlueRobot.transform.localScale.y / 2, 0.0f);
 
-                    Red.transform.localPosition = new Vector3(Stage.transform.localPosition.x + (1.268f * RedRobot.transform.localScale.x), RedRobot.transform.localScale.y / 2, 0.0f);
+                    Red.transform.localPosition = new Vector3(Stage.transform.localPosition.x + (1.218f * RedRobot.transform.localScale.x), RedRobot.transform.localScale.y / 2, 0.0f);
 
+                    // prevents user from creating more then 1 arena
                     CreatedMatch = true;
 
+                    // stop detecting new surfaces
                     planeGeneratorObj.GetComponent<DetectedPlaneGenerator>().StopDetecting = true;
+                    pointGeneratorObj.GetComponent<PointcloudVisualizer>().StopDetecting = true;
                 }
             }
         }

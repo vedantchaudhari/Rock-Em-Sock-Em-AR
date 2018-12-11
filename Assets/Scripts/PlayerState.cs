@@ -2,30 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
-public class PlayerState : MonoBehaviourPunCallbacks {
-
+public class PlayerState : MonoBehaviour
+{
+    // health
 	private float mHealth = 300;
 
+    // black material for when you lose
     public Material DeadMaterial;
 
+    // used to get the head for material
     public GameObject MyHead;
 
+    // get current health
     public float getHealth()
     {
 		return mHealth;
 	}
 
-	public void damage(float damageAmount)
+    // damageAmount = arm distance converted to damage
+    // size = to scale the head movement from damage dealt
+	public void damage(float damageAmount, float size)
     {
 		mHealth -= damageAmount;
-        MyHead.transform.position += new Vector3(0.0f, damageAmount / 600.0f, 0.0f);
-        //if (mHealth < 0.0f)
-        //{
-        //    Dead();
-        //}
+        MyHead.transform.position += new Vector3(0.0f, (damageAmount / 600.0f) * size, 0.0f);
+        if(mHealth < 0)
+        {
+            Dead();
+        }
     }
 
+    // switched head color because the player lost
     private void Dead()
     {
         MyHead.GetComponent<Renderer>().material = DeadMaterial;
